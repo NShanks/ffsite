@@ -1,0 +1,75 @@
+webste for growth
+
+organize invites and information
+- crm?
+- who belongs where
+
+gregs vision:
+login page. not necessarily account but also form for us to look at and sift thru
+
+shirt size, leaderboards, 
+
+
+
+scottfishbowl site is what he wants
+
+first problem is organinzing peoples information. im thinking gohighlevel but can i pass that info back and forth from a site?
+
+what is front facing framework (custom, webflow) ?
+
+
+
+i think money up front, if you dont get in, we pay you back
+
+what info do we need?
+name
+email
+sleeper
+venmo? some kind of payment info
+shirt size
+discord
+
+
+were going to need a sitemap
+sleeper api
+
+1. sign up page/home page
+2. rules page
+3. leaderboard, but for playoffs would be great
+
+best link from database to website? sleeper to db to site
+
+WWE
+1252701932896657408
+Dave
+1252704674759315456
+joe/animal
+1252704914572849152
+
+
+I run a fantasy football league of leagues in a way. the structure is theres 7 leagues right now and each league has 12 people. each league has a commissioner and im one of them. all the rules are the same for each league and they are all standard fantasy rules until playoffs. some unique aspecs are that each week, the highest scorer gets $5, well sometimes do funky rosters or scoring settings. and in the playoffs, you do normal league playoffs for a regular payout. first gets the most, second gets a bit and third gets their money back or whatever. however, we also take each playoff team across the 7 leagues and make one big playoff bracket. each week, we sort by points scored and the bottom half gets knocked out until there is one ultimate winner and they win a large sum of money and pick a charity to donate to. the way we do this now is we have a discord server with pretty much everyone on it and each comissioner invites as many friends as possible so everyone knows a comissioner in the league. the problem is that each week, payouts and venmos get confusing, who needs to contact who gets convoluted and everything its basically pretty jumbled. and starting each season is also hard, tracking down league dues, whos contacts joined the proper sleeper leagues. we manage it all but we want to upgrade it a bit for next season with a website. ideally we want a sign up page where we can get name, email, sleeper id, venmo (or whatever kind of payment information would be most appropriate/flexible for this) and any other info. it would be nice to have all the leagues standings visible and have the overall final playoff functionality on there. live would be great but if not, thats fine too. we plan to grow this so a website is becoming necessary. the problem for me is that i dont know what tech stack to use. i have experience with gohighlevel and webflow but not the two of them together. i also have experience with react and mongodb. the world is my oyster here and im looking for advice or options on how to handle this. were definitely using sleeper because their api allows easy access to all of the scoring. but as far as web frameworks, website builders, backend databases, etc, im not sure about.
+
+
+https://scottfishbowl.com/index.php
+https://docs.sleeper.com/#leagues
+
+Pages:
+home
+standings, each league. grid of each leagues sleeper standings section
+bracket (playoffs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
