@@ -9,7 +9,7 @@ class MemberProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # --- Our Custom Fields ---
     full_name = models.CharField(max_length=100, blank=True)
-    sleeper_id = models.CharField(max_length=100, blank=True, null=True)
+    sleeper_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     payment_info = models.CharField(max_length=100, blank=True, null=True)
     has_paid_dues = models.BooleanField(default=False)
     discord_username = models.CharField(max_length=100, blank=True, null=True)
