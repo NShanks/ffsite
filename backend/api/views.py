@@ -56,6 +56,9 @@ class TeamList(APIView):
             # This is the Django magic: filter teams where the
             # 'league' (which is a ForeignKey) has an 'id' that matches.
             queryset = queryset.filter(league__id=league_id)
+
+        # Sort by wins (descending), then points_for (descending)
+        queryset = queryset.order_by('-wins', '-points_for')
             
         # 4. Serialize the (now possibly filtered) queryset
         serializer = TeamSerializer(queryset, many=True)

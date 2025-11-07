@@ -42,7 +42,18 @@ class LeagueSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['id', 'owner', 'league', 'sleeper_roster_id', 'team_name', 'made_league_playoffs']
+        fields = [
+            'id', 
+            'owner', 
+            'league', 
+            'sleeper_roster_id', 
+            'team_name', 
+            'made_league_playoffs',
+            'wins',
+            'losses',
+            'ties',
+            'points_for'
+        ]
 
 
 class WeeklyScoreSerializer(serializers.ModelSerializer):

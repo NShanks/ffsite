@@ -50,10 +50,15 @@ class Team(models.Model):
     sleeper_roster_id = models.CharField(max_length=50)
     team_name = models.CharField(max_length=100)
     made_league_playoffs = models.BooleanField(default=False)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    ties = models.IntegerField(default=0)
+    points_for = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
 
     def __str__(self):
-        # Shows "Team Name (Owner Name)" in admin
-        return f"{self.team_name} ({self.owner.user.username})"
+        if self.owner:
+            return f"{self.team_name} ({self.owner.user.username})"
+        return f"{self.team_name} (No Owner)"
 
 
 class WeeklyScore(models.Model):

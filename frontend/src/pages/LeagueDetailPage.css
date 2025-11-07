@@ -1,0 +1,23 @@
+.standings-table {
+  width: 100%;
+  max-width: 800px; /* Stop it from getting too wide */
+  margin-top: 2rem;
+  border-collapse: collapse; /* Makes borders look clean */
+}
+
+.standings-table th,
+.standings-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.standings-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* This makes every other row a slightly different color */
+.standings-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

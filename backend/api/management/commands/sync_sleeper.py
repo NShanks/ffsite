@@ -21,6 +21,7 @@ class Command(BaseCommand):
             league_url = f"https://api.sleeper.app/v1/league/{league.sleeper_league_id}"
             rosters_url = f"https://api.sleeper.app/v1/league/{league.sleeper_league_id}/rosters"
             users_url = f"https://api.sleeper.app/v1/league/{league.sleeper_league_id}/users"
+            # --- The 'standings_url' is GONE ---
 
             try:
                 league_response = requests.get(league_url)
@@ -33,7 +34,7 @@ class Command(BaseCommand):
                     continue
 
                 # ----------------------------------------------------
-                # STEP 1: SYNC USERS (This part was correct)
+                # STEP 1: SYNC USERS (No Changes)
                 # ----------------------------------------------------
                 self.stdout.write('Syncing users...')
                 users_response = requests.get(users_url)
@@ -72,9 +73,9 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS('  Users synced successfully.'))
 
                 # ----------------------------------------------------
-                # STEP 2: SYNC TEAMS (ROSTERS) - *** FIXED LOGIC ***
+                # STEP 2: SYNC TEAMS & STANDINGS (*** NEW COMBINED LOGIC ***)
                 # ----------------------------------------------------
-                self.stdout.write('Syncing teams (rosters)...')
+                self.stdout.write('Syncing teams, rosters, and standings...')
                 rosters_response = requests.get(rosters_url)
                 rosters_response.raise_for_status()
                 sleeper_rosters = rosters_response.json()
@@ -83,7 +84,7 @@ class Command(BaseCommand):
                     sleeper_roster_id = roster_data.get('roster_id')
                     owner_sleeper_id = roster_data.get('owner_id')
                     
-                    # 1. Find the owner profile FIRST
+                    # --- Get Owner Profile ---
                     owner_profile = None
                     if owner_sleeper_id:
                         try:
@@ -91,40 +92,47 @@ class Command(BaseCommand):
                         except MemberProfile.DoesNotExist:
                             self.stdout.write(self.style.ERROR(f'  Could not find member profile for sleeper ID {owner_sleeper_id}'))
 
-                    # 2. Now, determine the team name with our new logic
-                    team_name = None # Start with None
-                    
-                    # Attempt 1: Get custom name from metadata
+                    # --- Get Team Name ---
+                    team_name = None
                     if roster_data.get('metadata') and roster_data['metadata'].get('team_name'):
                         team_name = roster_data['metadata']['team_name']
-                    
-                    # Attempt 2: Fallback to owner's name
                     elif owner_profile:
-                        team_name = f"Team {owner_profile.full_name}" # e.g., "Team Shanks2"
-                    
-                    # Attempt 3: Final fallback
+                        team_name = f"Team {owner_profile.full_name}"
                     if not team_name:
                         team_name = "Team Name Not Set"
                     
-                    # 3. Create or Update the team
+                    # --- GET STANDINGS DATA (W-L-T) ---
+                    # This data lives inside the 'settings' object of the roster
+                    settings = roster_data.get('settings', {})
+                    wins = settings.get('wins', 0)
+                    losses = settings.get('losses', 0)
+                    ties = settings.get('ties', 0)
+                    
+                    # 'fpts' is Sleeper's field for 'Fantasy Points For'
+                    # We use .get('fpts', 0.00) for safety
+                    points_for = settings.get('fpts', 0.00)
+
+                    # --- Create or Update the Team with ALL data ---
                     if sleeper_roster_id:
                         team, team_created = Team.objects.update_or_create(
                             league=league,
                             sleeper_roster_id=sleeper_roster_id,
                             defaults={
                                 'owner': owner_profile, 
-                                'team_name': team_name # This will now be correct
+                                'team_name': team_name,
+                                'wins': wins,
+                                'losses': losses,
+                                'ties': ties,
+                                'points_for': points_for or 0.00
                             }
                         )
                         if team_created:
                             self.stdout.write(f'  Created new team: {team_name}')
-                        elif team.team_name != team_name: # If the team existed...
-                            self.stdout.write(f'  Updated team name to: {team_name}') #...log that we updated it.
                     
-                self.stdout.write(self.style.SUCCESS('  Teams synced successfully.'))
+                self.stdout.write(self.style.SUCCESS('  Teams & standings synced successfully.'))
 
                 # ----------------------------------------------------
-                # STEP 3: SYNC WEEKLY SCORES (This part was correct)
+                # STEP 3: SYNC WEEKLY SCORES (No Changes)
                 # ----------------------------------------------------
                 self.stdout.write('Syncing weekly scores...')
                 for week in range(1, 19):
@@ -136,8 +144,6 @@ class Command(BaseCommand):
                     if not matchups_data:
                         self.stdout.write(f'  Week {week}: No data found, stopping score sync.')
                         break 
-                    
-                    # self.stdout.write(f'  Syncing Week {week}...') # This can be noisy, let's quiet it.
                     
                     for matchup in matchups_data:
                         roster_id = matchup.get('roster_id')
