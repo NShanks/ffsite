@@ -63,9 +63,18 @@ class WeeklyScoreSerializer(serializers.ModelSerializer):
 
 
 class UltimatePlayoffEntrySerializer(serializers.ModelSerializer):
+    team = serializers.StringRelatedField()
     class Meta:
         model = UltimatePlayoffEntry
-        fields = ['id', 'team', 'season', 'playoff_week', 'week_score', 'is_eliminated', 'final_rank']
+        fields = [
+            'id', 
+            'team',
+            'season', 
+            'playoff_week', 
+            'week_score', 
+            'is_eliminated', 
+            'final_rank'
+        ]
 
 
 class PayoutSerializer(serializers.ModelSerializer):

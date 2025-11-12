@@ -13,11 +13,15 @@
 }
 
 .standings-table th {
-  background-color: #f4f4f4;
+  background-color: var(background-color);
   font-weight: bold;
+}
+
+.standings-table tbody tr:nth-child(6) {
+  border-bottom: 3px solid var(--highlight); /* A thicker, red border */
 }
 
 /* This makes every other row a slightly different color */
 .standings-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--background-color-2);
 }

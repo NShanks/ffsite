@@ -1,3 +1,49 @@
+/* At the top of /src/index.css */
+:root {
+  --primary-color: #e64553; /* A nice blue */
+  --secondary-color: #6c757d; /* A gray */
+  --background-color: #eff1f5; /* Base color */
+  --background-color-2: #ccd0da; /* A bit darker */
+  --background-color-3: #acb0be; /* Even more dark */
+  --background-color-4: #4c4f69; /* Opposite */
+  --text-color: #4c4f69;
+  --text-color-2: #5c5f77;
+  --text-light: #eff1f5;
+  --highlight: rgb(0, 145, 65);
+  --border-color: #ddd;
+  --success-color: #28a745;
+  --error-color: #ff6b6b;
+
+  /* Also define your fonts as variables! */
+  --font-body: 'Patrick hand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Schoolbell', sans-serif; /* Your new Google Font */
+}
+
+/* --- ADD THIS NEW BLOCK ---
+  This block defines the colors for your dark theme.
+  It will ONLY be active when the <html> element has
+  the attribute [data-theme="dark"]
+*/
+[data-theme="dark"] {
+  --primary-color: #00aaff;        /* A brighter blue for dark mode */
+  --secondary-color: #8c959d;
+  --background-color: #4c4f69;      /* Dark background */
+  --background-color-2: #5c5f77; /* A bit lighter */
+  --background-color-3: #6c6f85; /* Lven lighter */
+  --background-color-4: #eff1f5; /* Opposite */
+  --card-background: #1e1e1e;       /* Slightly lighter dark for cards */
+  --text-color: #eff1f5;           /* Light text */
+  --text-color-2: #ccd0da;
+  --text-light: #4c4f69;
+  --highlight: rgb(0, 202, 91);
+  --border-color: #444;           /* Darker borders */
+  --success-color: #31c45a;
+  --error-color: #ff7878;
+}
+
+
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +51,77 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--primary-color);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+
+
+
+/* CSS Reset */
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  /* 4. Add accessible line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/*
+  10. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
 }

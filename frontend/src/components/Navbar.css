@@ -2,20 +2,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color: var(--background-color-4);
   color: white;
   padding: 0 2rem;
   height: 60px;
 }
 
 .nav-logo a {
-  color: white;
+  color: var(--text-light);
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .nav-links {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
   display: flex;
   list-style: none;
   margin: 0;
@@ -23,15 +25,50 @@
 }
 
 .nav-links li {
-  padding-left: 1.5rem;
+  padding-left: 3rem;
 }
 
 .nav-links a {
-  color: white;
+  color: var(--text-light); /* Or var(--text-light) */
   text-decoration: none;
   font-size: 1rem;
+
+  padding-bottom: 5px;
+  border-bottom: 3px solid transparent;
+  transition: border-bottom-color 0.2s ease-in-out;
 }
 
+/* Find this existing rule */
 .nav-links a:hover {
-  color: #ddd;
+  color: var(--text-color-2);
+  /* Optional: You can make it underline on hover, too */
+  /* border-bottom-color: var(--secondary-color); */
 }
+
+/* --- ADD THIS NEW RULE --- */
+/* This is what NavLink adds automatically */
+.nav-links a.active {
+  /* Use one of your theme colors for the underline! */
+  border-bottom-color: var(--error-color); /* e.g., your red color */
+}
+
+
+.theme-toggle-button {
+  background: none;
+  border: 1px solid var(--text-light);
+  color: var(--text-light);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.theme-toggle-button:hover {
+  background-color: var(--text-light);
+  color: var(--primary-color); /* On hover, use the theme's background and text */
+}
+
+/* For dark mode, these variables will change, and the button style
+   will automatically update! */

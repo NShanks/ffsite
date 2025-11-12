@@ -72,7 +72,7 @@ class WeeklyScoreList(APIView):
 
 class UltimatePlayoffEntryList(APIView):
     def get(self, request, format=None):
-        entries = UltimatePlayoffEntry.objects.all()
+        entries = UltimatePlayoffEntry.objects.all().order_by('playoff_week', '-week_score')
         serializer = UltimatePlayoffEntrySerializer(entries, many=True)
         return Response(serializer.data)
 
