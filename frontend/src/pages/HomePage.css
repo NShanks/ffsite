@@ -1,0 +1,101 @@
+.home-container {
+  padding: 2rem;
+}
+
+.home-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.home-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.home-hero p {
+  font-size: 1.25rem;
+  color: var(--secondary-color);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* This is the Bento Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* 1 column on mobile */
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* On larger screens, switch to 2 columns */
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bento-widget-list {
+  list-style: none;
+  padding-left: 0;
+}
+.bento-widget-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color, #eee);
+  font-size: 0.95rem;
+}
+.bento-widget-list li:last-child {
+  border-bottom: none;
+}
+.bento-widget-list .team-name {
+  font-weight: 600;
+}
+.bento-widget-list .team-score {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+.bento-widget-list .team-details {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  display: block;
+}
+
+/* This is the Bento Box itself */
+.bento-box {
+  background: var(--card-background, #fff);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 12px;
+  padding: 2rem;
+  text-decoration: none; /* Removes underline from the link */
+  color: var(--text-color); /* Uses the theme's text color */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.bento-box:hover {
+  transform: translateY(-5px); /* Lifts the card on hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bento-box h2 {
+  font-size: 1.75rem;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.bento-box p {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.bento-box .cta-text {
+  display: block;
+  margin-top: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}

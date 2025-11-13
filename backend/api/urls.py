@@ -9,6 +9,10 @@ urlpatterns = [
     path('scores/', views.WeeklyScoreList.as_view(), name='score-list'),
     path('playoff-entries/', views.UltimatePlayoffEntryList.as_view(), name='playoff-entry-list'),
     path('payouts/', views.PayoutList.as_view(), name='payout-list'),
+
+    # --- Widgets ---
+    path('widget/weekly-winner/', views.WeeklyWinner.as_view(), name='widget-weekly-winner'),
+    path('widget/power-rankings/', views.PowerRankings.as_view(), name='widget-power-rankings'),
     
     # --- ADMIN COMMANDS ---
     path('admin/run-sync/', views.RunSyncSleeper.as_view(), name='admin-run-sync'),

@@ -1,11 +1,8 @@
-"# IYKYK Site" 
-# ffsite
-I need a better way for users to visualize what's going on in the IYKYK charity football league. I want to create an application that can showcase teams and leagues while giving a better overview of the entire operation for the players. Especially during the playoffs.
+Markdown
 
+# IYKYK Charity Fantasy Football League
 
-# FFL Site (Fantasy Football League-of-Leagues)
-
-> A full-stack application (Django + React) to manage a multi-league fantasy football association, track custom playoffs, and handle payouts.
+A full-stack application (Django + React) built to manage the IYKYK multi-league fantasy football association. Its primary goal is to showcase teams and leagues, provide a clear overview of the custom "BIG Playoff," and automate admin tasks like payout notifications.
 
 ---
 
@@ -25,7 +22,7 @@ How to get a new copy of this project running from scratch.
 
 1.  Navigate into the backend folder: `cd backend`
 2.  Create a Python virtual environment: `python -m venv venv`
-3.  Activate the environment: `venv\Scripts\activate`
+3.  Activate the environment (Windows): `venv\Scripts\activate`
 4.  Install all required packages: `pip install -r requirements.txt`
 5.  Create the database: `python manage.py migrate`
 6.  Create your admin account: `python manage.py createsuperuser`
@@ -55,13 +52,20 @@ venv\Scripts\activate
 
 # Start the Django server
 python manage.py runserver
+Your backend will be running at http://localhost:8000.
 
+Terminal 2: Frontend (React)
+Bash
 
+# Navigate to the frontend folder
+cd frontend
 
+# Start the React server
+npm start
+Your frontend will be running at http://localhost:3000.
 
-
-Admin Workflow & Project Notes
-This is the "engine" of the app. All custom logic is handled by management commands.
+Admin Workflow & Management Commands
+This is the "engine" of the app. All custom logic is handled by management commands run from the backend folder.
 
 1. sync_sleeper (Run Daily)
 This is the main "engine." It syncs all data from the Sleeper API into our local database.
@@ -72,7 +76,7 @@ Bash
 python manage.py sync_sleeper
 What it does:
 
-Fetches the current NFL week.
+Fetches the current NFL week from the Sleeper API.
 
 Syncs all Users and MemberProfiles.
 
@@ -80,15 +84,30 @@ Syncs all Teams, including their W-L-T record and points_for.
 
 Syncs all WeeklyScores from Week 1 through the current week.
 
-"Playoff Latch":
+"Playoff Latch" Logic:
 
-Before Week 15: It skips the playoff sync.
+Before Week 15: It skips the playoff bracket sync.
 
 During Week 15: It runs once to find the final playoff teams and checks the made_league_playoffs box.
 
-After Week 15: It "latches" and stops syncing the bracket to preserve our original playoff pool.
+After Week 15: It "latches" and stops syncing the bracket (to preserve our original playoff pool) as long as UltimatePlayoffEntry records exist.
 
-2. start_big_playoff (Run ONCE)
+2. post_weekly_winners (Run Weekly, after sync)
+This command finds the high scorer for each league and posts a consolidated message to the admin Discord channel.
+
+Bash
+
+# Run this at the END of each regular season week
+python manage.py post_weekly_winners --week=10
+What it does:
+
+Finds the highest WeeklyScore for each League for the given week.
+
+Gathers the winner's name, team name, score, and Venmo info.
+
+Posts one single, clean message to the Discord webhook defined in settings.py.
+
+3. start_big_playoff (Run ONCE)
 This is the "starting gun" for the BIG Playoff.
 
 Bash
@@ -103,8 +122,8 @@ Creates their first UltimatePlayoffEntry record for Week 15.
 
 This "flips the latch" and tells sync_sleeper to stop syncing the brackets.
 
-3. run_playoff_elimination (Run Weekly)
-This is the script that runs your custom playoff logic.
+4. run_playoff_elimination (Run Weekly - Playoffs)
+This script runs your custom, points-based elimination logic.
 
 Bash
 
@@ -112,7 +131,7 @@ Bash
 python manage.py run_playoff_elimination --week=15
 What it does:
 
-Finds all active playoff teams for that week.
+Finds all active UltimatePlayoffEntry teams for that week.
 
 Gets their scores from the WeeklyScore table.
 

@@ -1,8 +1,9 @@
 .standings-table {
-  width: 100%;
-  max-width: 800px; /* Stop it from getting too wide */
+  width: 800px;
   margin-top: 2rem;
-  border-collapse: collapse; /* Makes borders look clean */
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .standings-table th,

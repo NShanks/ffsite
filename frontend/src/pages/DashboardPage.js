@@ -105,7 +105,7 @@ function DashboardPage() {
       {isLoadingLeagues ? (
         <p>Loading leagues...</p>
       ) : (
-        <>
+        <div className='tabs-container'>
           {/* This is our new "Tabs" section */}
           <div className="league-tabs">
             {leagues.map(league => (
@@ -123,7 +123,7 @@ function DashboardPage() {
           <div className="standings-content">
             {renderStandingsTable()}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

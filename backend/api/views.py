@@ -20,6 +20,10 @@ from .serializers import (
 from rest_framework.permissions import IsAdminUser
 from django.core.management import call_command
 from django.http import JsonResponse
+import requests
+from django.db.models import Max
+from django.utils import timezone
+from .models import WeeklyScore, Team, League
 
 # Create your views here.
 
@@ -93,6 +97,92 @@ class LeagueDetail(APIView):
         league = get_object_or_404(League, pk=pk)
         serializer = LeagueSerializer(league)
         return Response(serializer.data)
+    
+class WeeklyWinner(APIView):
+    """
+    Finds the single highest score from LAST completed week
+    FOR EACH LEAGUE.
+    """
+    def get(self, request, format=None):
+        try:
+            # 1. Get the global NFL state
+            state_response = requests.get("https://api.sleeper.app/v1/state/nfl")
+            state_response.raise_for_status()
+            state_data = state_response.json()
+
+            current_week = state_data.get('week', 0)
+            if current_week == 0:
+                current_week = state_data.get('display_week', 0)
+
+            target_week = current_week - 1
+
+            if target_week < 1:
+                return Response({"message": "Regular season has not started yet."}, status=404)
+
+            # 2. This is the new logic
+            #    We've REMOVED the 'self.stdout.write' line
+
+            all_leagues = League.objects.all()
+            winners_list = [] 
+
+            # 3. Loop through every league
+            for league in all_leagues:
+                try:
+                    # 4. Find the top score FOR THIS LEAGUE
+                    top_score_entry = WeeklyScore.objects.filter(
+                        team__league=league,
+                        week=target_week
+                    ).order_by('-points_scored').first()
+
+                    if top_score_entry:
+                        # --- THIS IS THE FIX ---
+                        # 5. Add a safety check for the owner
+                        owner_name = "Unclaimed Team"
+                        if top_score_entry.team.owner:
+                            owner_name = top_score_entry.team.owner.full_name
+
+                        # 6. Add the winner's data to our list
+                        data = {
+                            'week': target_week,
+                            'team_name': top_score_entry.team.team_name,
+                            'owner_name': owner_name, # Use our new, safe variable
+                            'score': top_score_entry.points_scored,
+                            'league_name': league.name
+                        }
+                        winners_list.append(data)
+
+                except WeeklyScore.DoesNotExist:
+                    continue 
+
+            # 7. Return the full list of winners
+            return Response(winners_list)
+
+        except Exception as e:
+            # We'll return the error as a string
+            return Response({"message": str(e)}, status=500)
+        
+        
+class PowerRankings(APIView):
+    """
+    Gets the top 5 highest-scoring teams across all leagues.
+    """
+    def get(self, request, format=None):
+        top_teams = Team.objects.all().order_by('-points_for')[:5]
+
+        data = []
+        for team in top_teams:
+            # --- THIS IS THE FIX ---
+            # We add a check to see if team.owner exists
+            owner_name = team.owner.full_name if team.owner else "Unclaimed Team"
+
+            data.append({
+                'team_name': team.team_name,
+                'owner_name': owner_name, # Use our new, safe variable
+                'points_for': team.points_for,
+                'league_name': team.league.name,
+                'record': f"{team.wins}-{team.losses}-{team.ties}"
+            })
+        return Response(data)
     
 
 
