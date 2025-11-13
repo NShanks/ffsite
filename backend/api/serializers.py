@@ -40,11 +40,16 @@ class LeagueSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    # This is the "magic" line.
+    # It tells Django to use the serializer above 
+    # for the 'owner' field.
+    owner = MemberProfileSerializer(read_only=True) 
+
     class Meta:
         model = Team
         fields = [
             'id', 
-            'owner', 
+            'owner', # This will now be a full object
             'league', 
             'sleeper_roster_id', 
             'team_name', 

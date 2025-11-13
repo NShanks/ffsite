@@ -9,4 +9,14 @@ urlpatterns = [
     path('scores/', views.WeeklyScoreList.as_view(), name='score-list'),
     path('playoff-entries/', views.UltimatePlayoffEntryList.as_view(), name='playoff-entry-list'),
     path('payouts/', views.PayoutList.as_view(), name='payout-list'),
+    
+    # --- ADMIN COMMANDS ---
+    path('admin/run-sync/', views.RunSyncSleeper.as_view(), name='admin-run-sync'),
+    path('admin/start-playoff/', views.RunStartPlayoff.as_view(), name='admin-start-playoff'),
+    path('admin/run-elimination/', views.RunPlayoffElimination.as_view(), name='admin-run-elimination'),
+    path('admin/post-winners/', views.RunPostWinners.as_view(), name='admin-post-winners'),
+
+    # --- ADMIN DATA EDITING ---
+    # This URL will be like /api/member-profile/5/update-venmo/
+    path('member-profile/<int:pk>/update-venmo/', views.UpdateMemberVenmo.as_view(), name='admin-update-venmo'),
 ]

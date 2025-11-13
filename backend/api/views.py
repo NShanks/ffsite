@@ -17,6 +17,9 @@ from .serializers import (
     UltimatePlayoffEntrySerializer, 
     PayoutSerializer
 )
+from rest_framework.permissions import IsAdminUser
+from django.core.management import call_command
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -90,3 +93,78 @@ class LeagueDetail(APIView):
         league = get_object_or_404(League, pk=pk)
         serializer = LeagueSerializer(league)
         return Response(serializer.data)
+    
+
+
+# --- ADMIN-ONLY COMMAND ENDPOINTS ---
+
+class RunSyncSleeper(APIView):
+    permission_classes = [IsAdminUser] # ONLY admins can use this
+
+    def post(self, request, format=None):
+        try:
+            # This runs your command!
+            call_command('sync_sleeper')
+            return Response({"status": "success", "message": "Sleeper sync command started."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+class RunStartPlayoff(APIView):
+    permission_classes = [IsAdminUser] # ONLY admins can use this
+
+    def post(self, request, format=None):
+        try:
+            call_command('start_big_playoff')
+            return Response({"status": "success", "message": "BIG Playoff started successfully."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+class RunPlayoffElimination(APIView):
+    permission_classes = [IsAdminUser] # ONLY admins can use this
+
+    def post(self, request, format=None):
+        # We'll get the week from the React app's request
+        week = request.data.get('week')
+        if not week:
+            return Response({"status": "error", "message": "Week number is required."}, status=400)
+
+        try:
+            call_command('run_playoff_elimination', week=week)
+            return Response({"status": "success", "message": f"Playoff elimination for week {week} complete."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+class RunPostWinners(APIView):
+    permission_classes = [IsAdminUser] # ONLY admins can use this
+
+    def post(self, request, format=None):
+        week = request.data.get('week')
+        if not week:
+            return Response({"status": "error", "message": "Week number is required."}, status=400)
+
+        try:
+            call_command('post_weekly_winners', week=week)
+            return Response({"status": "success", "message": f"Weekly winners for week {week} posted to Discord."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+
+# --- ADMIN-ONLY VENMO EDITOR ENDPOINT ---
+
+class UpdateMemberVenmo(APIView):
+    permission_classes = [IsAdminUser] # ONLY admins can use this
+
+    def post(self, request, pk, format=None):
+        # 'pk' will be the MemberProfile ID
+        try:
+            profile = get_object_or_404(MemberProfile, pk=pk)
+
+            # Get the new venmo string from the request
+            venmo_info = request.data.get('venmo_info')
+
+            profile.payment_info = venmo_info
+            profile.save()
+
+            return Response({"status": "success", "message": "Venmo info updated."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
