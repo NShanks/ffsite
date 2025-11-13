@@ -131,3 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+# WEBHOOK FOR DISCORD NOTIFICATIONS
+DISCORD_PAYOUT_WEBHOOK_URL = "https://discord.com/api/webhooks/1438336011573792930/pDFj6DpdvpHWgck4IHuw76Mtlxbjwwdl-rOFCvvLHcEJMVP8NT_EvSIbRMw7tJ2nm5me"
