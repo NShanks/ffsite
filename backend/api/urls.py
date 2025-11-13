@@ -19,4 +19,7 @@ urlpatterns = [
     # --- ADMIN DATA EDITING ---
     # This URL will be like /api/member-profile/5/update-venmo/
     path('member-profile/<int:pk>/update-venmo/', views.UpdateMemberVenmo.as_view(), name='admin-update-venmo'),
+    path('admin/all-members/', views.AllMembersList.as_view(), name='admin-all-members'),
+    path('member-profile/<int:pk>/toggle-dues/', views.ToggleDues.as_view(), name='admin-toggle-dues'),
+    path('team/<int:pk>/toggle-playoff-flag/', views.TogglePlayoffFlag.as_view(), name='admin-toggle-playoff-flag'),
 ]

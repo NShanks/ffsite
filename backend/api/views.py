@@ -150,7 +150,6 @@ class RunPostWinners(APIView):
 
 
 # --- ADMIN-ONLY VENMO EDITOR ENDPOINT ---
-
 class UpdateMemberVenmo(APIView):
     permission_classes = [IsAdminUser] # ONLY admins can use this
 
@@ -166,5 +165,60 @@ class UpdateMemberVenmo(APIView):
             profile.save()
 
             return Response({"status": "success", "message": "Venmo info updated."})
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+# --- ADMIN-ONLY DUES & PLAYOFF TOGGLES ---
+
+class AllMembersList(APIView):
+    """
+    Securely provides a list of ALL member profiles.
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, format=None):
+        # Get all profiles, ordered by name
+        profiles = MemberProfile.objects.all().order_by('full_name')
+        # Use the 'smart' serializer we already built
+        serializer = MemberProfileSerializer(profiles, many=True)
+        return Response(serializer.data)
+
+class ToggleDues(APIView):
+    """
+    Toggles the 'has_paid_dues' boolean for a MemberProfile.
+    """
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk, format=None):
+        try:
+            profile = get_object_or_404(MemberProfile, pk=pk)
+            # Flip the boolean value
+            profile.has_paid_dues = not profile.has_paid_dues
+            profile.save()
+            return Response({
+                "status": "success", 
+                "message": "Dues status updated.",
+                "has_paid_dues": profile.has_paid_dues # Send back the new value
+            })
+        except Exception as e:
+            return Response({"status": "error", "message": str(e)}, status=500)
+
+class TogglePlayoffFlag(APIView):
+    """
+    Toggles the 'made_league_playoffs' boolean for a Team.
+    """
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk, format=None):
+        try:
+            team = get_object_or_404(Team, pk=pk)
+            # Flip the boolean value
+            team.made_league_playoffs = not team.made_league_playoffs
+            team.save()
+            return Response({
+                "status": "success", 
+                "message": "Playoff flag updated.",
+                "made_league_playoffs": team.made_league_playoffs # Send back the new value
+            })
         except Exception as e:
             return Response({"status": "error", "message": str(e)}, status=500)
