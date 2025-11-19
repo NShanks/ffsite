@@ -1,28 +1,76 @@
 .standings-table {
-  width: 800px;
-  margin-top: 2rem;
-  border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  /* The Table IS the Card now */
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  
+  border-radius: 20px;
+  overflow: hidden;
+  
+  /* Add margin-top to separate it from the tabs */
+  margin-top: 2rem; 
+  color: var(--text-primary);
 }
 
 .standings-table th,
 .standings-table td {
-  border: 1px solid #ddd;
-  padding: 12px;
+  padding: 16px 20px;
   text-align: left;
+  border: none;
+  
+  /* Add a subtle separator line at the bottom of every row */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
 }
 
+/* DARK MODE SEPARATOR ADJUSTMENT */
+[data-theme="dark"] .standings-table th,
+[data-theme="dark"] .standings-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* HEADER STYLES */
 .standings-table th {
-  background-color: var(background-color);
-  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.03); /* Very subtle header tint */
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
 
+[data-theme="dark"] .standings-table th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* REMOVE BOTTOM BORDER FROM LAST ROW */
+/* This prevents a double-line at the bottom of the rounded card */
+.standings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* HIGHLIGHT THE PLAYOFF CUTOFF (6th Row) */
+/* We can use a background tint instead of a harsh red line for the Apple look */
 .standings-table tbody tr:nth-child(6) {
-  border-bottom: 3px solid var(--highlight); /* A thicker, red border */
+  position: relative;
 }
 
-/* This makes every other row a slightly different color */
-.standings-table tbody tr:nth-child(even) {
-  background-color: var(--background-color-2);
+.standings-table tbody tr:nth-child(6) td {
+  /* Add a slightly thicker/colored separator to mark the cutoff */
+  border-bottom: 2px solid var(--color-error);
+}
+
+/* OPTIONAL: HOVER EFFECT FOR ROWS */
+.standings-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.standings-table tbody tr:hover {
+  background-color: var(--glass-bg-hover);
 }

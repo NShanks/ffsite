@@ -1,127 +1,151 @@
-/* At the top of /src/index.css */
 :root {
-  --primary-color: #e64553; /* A nice blue */
-  --secondary-color: #6c757d; /* A gray */
-  --background-color: #eff1f5; /* Base color */
-  --background-color-2: #ccd0da; /* A bit darker */
-  --background-color-3: #acb0be; /* Even more dark */
-  --background-color-4: #4c4f69; /* Opposite */
-  --text-color: #4c4f69;
-  --text-color-2: #5c5f77;
-  --text-light: #eff1f5;
-  --highlight: rgb(0, 145, 65);
-  --border-color: #ddd;
-  --success-color: #28a745;
-  --error-color: #ff6b6b;
+  /* --- 1. TYPOGRAPHY TOKENS --- */
+  /* We prefer Inter, falling back to Apple's system font */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
 
-  /* Also define your fonts as variables! */
-  --font-body: 'Patrick hand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Schoolbell', sans-serif; /* Your new Google Font */
+  /* Type Scale (Desktop) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 3rem;
+
+  /* Tracking (Letter Spacing) - Apple Style */
+  --tracking-tight: -0.03em;
+  --tracking-normal: -0.01em;
+  --tracking-wide: 0.02em;
+
+  /* --- 2. COLOR PALETTE (OKLCH) --- */
+  /* Brand Colors - A Deep, Vibrant "iMessage" Blue */
+  --brand-primary: oklch(0.55 0.2 260);
+  --brand-secondary: oklch(0.65 0.18 260);
+  
+  /* Functional Colors */
+  --color-success: oklch(0.6 0.15 150);
+  --color-error: oklch(0.6 0.2 25);
+  
+  /* --- 3. LIGHT THEME VARIABLES --- */
+  --bg-app: oklch(0.98 0.01 260); /* Very subtle tint */
+  
+  /* Text */
+  --text-primary: oklch(0.15 0.02 260);   /* Almost Black */
+  --text-secondary: oklch(0.45 0.04 260); /* Grey */
+  --text-tertiary: oklch(0.65 0.04 260);  /* Light Grey */
+
+  /* THE LIQUID GLASS RECIPE (Light) */
+  /* The background needs opacity to let the blur work */
+  --glass-bg: rgba(255, 255, 255, 0.65); 
+  --glass-bg-hover: rgba(255, 255, 255, 0.8);
+  
+  /* The Border: A subtle white outline + a faint grey ring */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+  
+  /* The "Shine": An inner white shadow to simulate edge thickness */
+  --glass-shine: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+  
+  /* The Shadow: Soft, diffuse, diffuse */
+  --glass-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.05),
+    0 10px 40px -5px rgba(0, 0, 0, 0.02);
+
+  /* Background Blobs (Vibrant for Light Mode) */
+  --blob-1: oklch(0.85 0.15 260 / 0.6); /* Blue */
+  --blob-2: oklch(0.85 0.15 320 / 0.6); /* Purple */
+  --blob-3: oklch(0.9 0.15 200 / 0.6);  /* Cyan */
 }
 
-/* --- ADD THIS NEW BLOCK ---
-  This block defines the colors for your dark theme.
-  It will ONLY be active when the <html> element has
-  the attribute [data-theme="dark"]
-*/
 [data-theme="dark"] {
-  --primary-color: #00aaff;        /* A brighter blue for dark mode */
-  --secondary-color: #8c959d;
-  --background-color: #4c4f69;      /* Dark background */
-  --background-color-2: #5c5f77; /* A bit lighter */
-  --background-color-3: #6c6f85; /* Lven lighter */
-  --background-color-4: #eff1f5; /* Opposite */
-  --card-background: #1e1e1e;       /* Slightly lighter dark for cards */
-  --text-color: #eff1f5;           /* Light text */
-  --text-color-2: #ccd0da;
-  --text-light: #4c4f69;
-  --highlight: rgb(0, 202, 91);
-  --border-color: #444;           /* Darker borders */
-  --success-color: #31c45a;
-  --error-color: #ff7878;
+  /* --- 4. DARK THEME VARIABLES --- */
+  --bg-app: oklch(0.1 0.01 260); /* Deep dark blue-grey */
+  
+  /* Text */
+  --text-primary: oklch(0.98 0.01 260);
+  --text-secondary: oklch(0.7 0.03 260);
+  --text-tertiary: oklch(0.5 0.03 260);
+
+  /* THE LIQUID GLASS RECIPE (Dark) */
+  --glass-bg: rgba(30, 30, 35, 0.6);
+  --glass-bg-hover: rgba(40, 40, 45, 0.7);
+  
+  /* Dark mode glass needs a thin white border to pop against the dark bg */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  /* Inner shine is subtler in dark mode */
+  --glass-shine: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  
+  --glass-shadow: 
+    0 8px 32px -8px rgba(0, 0, 0, 0.5),
+    0 2px 8px -2px rgba(0, 0, 0, 0.3);
+
+  /* Background Blobs (Deep & moody for Dark Mode) */
+  --blob-1: oklch(0.25 0.1 260 / 0.5); 
+  --blob-2: oklch(0.25 0.1 300 / 0.5);
+  --blob-3: oklch(0.2 0.1 220 / 0.5);
 }
 
-
-
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-family: var(--font-body);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--primary-color);
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-
-
-
-
-/* CSS Reset */
-/* 1. Use a more-intuitive box-sizing model */
+/* --- 5. GLOBAL RESET & BASE --- */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* 2. Remove default margin */
-* {
-  margin: 0;
-}
-
-/* 3. Enable keyword animations */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    interpolate-size: allow-keywords;
-  }
-}
-
 body {
-  /* 4. Add accessible line-height */
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   line-height: 1.5;
-  /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
+  
+  /* THE MESH GRADIENT BACKGROUND */
+  background-image: 
+    radial-gradient(at 0% 0%, var(--blob-1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, var(--blob-2) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--blob-3) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--blob-1) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
-/* 6. Improve media defaults */
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
+/* --- 6. TYPOGRAPHY UTILITIES --- */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  font-weight: 700; /* Heavier "Display" weight */
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+  margin-top: 0;
 }
 
-/* 7. Inherit fonts for form controls */
-input, button, textarea, select {
-  font: inherit;
-}
+h1 { font-size: var(--text-3xl); line-height: 1.1; }
+h2 { font-size: var(--text-2xl); line-height: 1.2; }
+h3 { font-size: var(--text-xl);  line-height: 1.3; }
 
-/* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
-}
-
-/* 9. Improve line wrapping */
 p {
-  text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  letter-spacing: var(--tracking-normal);
+  margin-bottom: 1rem;
 }
 
-/*
-  10. Create a root stacking context
-*/
-#root, #__next {
-  isolation: isolate;
+a {
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--brand-secondary);
+}
+
+/* --- 7. GLASS CARD UTILITY (Reusable) --- */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-shine);
+  border-radius: 24px; /* Apple "Squircle" feel */
 }

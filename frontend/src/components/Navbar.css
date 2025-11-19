@@ -1,86 +1,159 @@
+/* frontend/src/components/Navbar.css */
+
+/* 1. THE FLOATING CONTAINER */
 .navbar {
+  position: sticky;
+  top: 1rem;
+  z-index: 1000;
+  
+  /* Layout */
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: var(--background-color);
-  color: var(--background-color-4);
-  padding: 0 2rem;
-  height: 60px;
-  border-bottom: solid 1px;
+  justify-content: space-between;
+  
+  /* Dimensions & Centering */
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0.5rem 1.5rem; /* Slightly tighter padding for a sleeker pill */
+  
+  /* Glassmorphism */
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 100px;
 }
 
+/* 2. LOGO */
 .nav-logo a {
-  color: var(--text-color);
+  font-family: var(--font-display);
+  color: var(--text-primary);
   text-decoration: none;
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  padding-right: 1rem; /* Breathing room */
 }
 
+/* 3. MAIN LINKS WRAPPER */
 .nav-links {
-  font-family: var(--font-heading);
-  text-transform: uppercase;
   display: flex;
-  justify-content: center;
-  list-style: none;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
-.nav-links li {
-  padding-left: 3rem;
+/* 4. GROUP 1: PAGES (Home, About, etc) */
+.nav-button-pages {
+  display: flex;
+  gap: 0.25rem; /* Tight spacing for pill links */
 }
 
-.nav-links a {
-  color: var(--text-color);
+/* 5. GROUP 2: ACTIONS (Login, Theme) */
+.nav-button-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto; /* Pushes this group to the far right */
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-color); /* Optional divider */
+}
+
+/* 6. SHARED LINK STYLES */
+.nav-button-pages a,
+.nav-button-container a {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 1.5rem;
-
-  padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
-  transition: border-bottom-color 0.2s ease-in-out;
+  
+  /* Pill Shape */
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  transition: all 0.2s ease;
 }
 
-.nav-links a:hover {
-  color: var(--text-color-2);
-  border-bottom-color: 1px var(--secondary-color);
+/* Hover State */
+.nav-button-pages a:hover,
+.nav-button-container a:hover {
+  color: var(--text-primary);
+  background-color: var(--glass-bg-hover);
 }
 
-.nav-links a.active {
-  border-bottom-color: var(--secondary-color);
-}
-.nav-button-pages{
-  display: flex;
-  margin-left: auto;
-}
-.nav-button-container{
-  display: flex;
-  margin-left: auto;
-}
-.theme-toggle-button .theme-icon {
-  width: 24px; 
-  height: 24px;
-  vertical-align: middle;
-  background-color: var(--text-color);
-  display: inline-block;
-  -webkit-mask-size: cover;
-  mask-size: cover;
+/* Active State (Solid Pill) */
+.nav-button-pages a.active,
+.nav-button-container a.active {
+  background-color: var(--text-primary);
+  color: var(--bg-app); /* Inverted text */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-
+/* 7. BUTTON STYLES (Logout & Theme) */
 .theme-toggle-button {
-  background: var(--background-color-2);
-  border: 1px solid var(--text-color);
-  color: var(--text-color);
-  padding: 5px 10px;
-  border-radius: 5px;
+  background: transparent;
+  border: none; /* Removed border for cleaner look */
+  color: var(--text-secondary);
   cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  transition: all 0.2s ease-in-out;
+  padding: 0.5rem;
+  border-radius: 100px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text-based buttons (like Logout) */
+.theme-toggle-button.text-button {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
 }
 
 .theme-toggle-button:hover {
-  background-color: var(--text-light);
-  color: var(--text-color-2);
+  background-color: var(--glass-bg-hover);
+  color: var(--text-primary);
+}
+
+/* 8. SVG ICON STYLES */
+.theme-icon {
+  width: 20px; 
+  height: 20px;
+  background-color: currentColor; /* This makes the icon verify the text color */
+  display: inline-block;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Mobile Response */
+@media (max-width: 768px) {
+  .navbar {
+    width: 95%;
+    padding: 0.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 24px; /* Less round on mobile to save space */
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-button-container {
+    margin-left: 0;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.5rem;
+    width: 100%;
+    justify-content: center;
+  }
 }

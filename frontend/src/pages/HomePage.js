@@ -79,10 +79,6 @@ function HomePage() {
 
       <header className="home-hero">
         <h1>Welcome to the IYKYK League Hub</h1>
-        <p>
-          The central source of truth for all 7 leagues. Track standings, 
-          follow the BIG Playoff, and see who owes who.
-        </p>
       </header>
 
       <main className="bento-grid">

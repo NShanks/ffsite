@@ -1,101 +1,139 @@
+/* frontend/src/pages/HomePage.css */
+
 .home-container {
-  padding: 2rem;
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .home-hero {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
+  padding-top: 2rem;
 }
 
 .home-hero h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  color: var(--primary-color);
+  /* We use a gradient text effect for the main title */
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  letter-spacing: var(--tracking-tight);
 }
 
 .home-hero p {
-  font-size: 1.25rem;
-  color: var(--secondary-color);
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
+  font-weight: 450; /* Slightly lighter than regular */
 }
 
-/* This is the Bento Grid */
+/* --- BENTO GRID LAYOUT --- */
 .bento-grid {
   display: grid;
-  grid-template-columns: 1fr; /* 1 column on mobile */
+  grid-template-columns: 1fr;
   gap: 1.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
-/* On larger screens, switch to 2 columns */
 @media (min-width: 768px) {
   .bento-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 }
 
-.bento-widget-list {
-  list-style: none;
-  padding-left: 0;
-}
-.bento-widget-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border-color, #eee);
-  font-size: 0.95rem;
-}
-.bento-widget-list li:last-child {
-  border-bottom: none;
-}
-.bento-widget-list .team-name {
-  font-weight: 600;
-}
-.bento-widget-list .team-score {
-  font-weight: 700;
-  color: var(--primary-color);
-}
-.bento-widget-list .team-details {
-  font-size: 0.85rem;
-  color: var(--secondary-color);
-  display: block;
-}
-
-/* This is the Bento Box itself */
+/* --- BENTO BOX (Using the Global Glass Utility) --- */
+/* We extend the .glass-card class in the JS, or apply properties here */
 .bento-box {
-  background: var(--card-background, #fff);
-  border: 1px solid var(--border-color, #ddd);
-  border-radius: 12px;
+  /* Inherit Glass Properties */
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-shine);
+  border-radius: 24px;
+
   padding: 2rem;
-  text-decoration: none; /* Removes underline from the link */
-  color: var(--text-color); /* Uses the theme's text color */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden; /* Keeps the inner shine contained */
 }
 
 .bento-box:hover {
-  transform: translateY(-5px); /* Lifts the card on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: var(--glass-bg-hover);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.15), /* Deeper shadow on hover */
+    var(--glass-shine);
 }
 
 .bento-box h2 {
-  font-size: 1.75rem;
-  color: var(--primary-color);
-  margin-top: 0;
+  font-size: var(--text-xl);
+  color: var(--text-primary); /* Headings should be distinct */
+  margin-bottom: 0.5rem;
+}
+
+.bento-box h3 {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-primary); /* Accent color for subheadings */
   margin-bottom: 1rem;
 }
 
-.bento-box p {
-  font-size: 1rem;
-  line-height: 1.6;
-  opacity: 0.9;
+/* --- WIDGET LIST STYLES --- */
+.bento-widget-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Pushes CTA to bottom */
 }
 
-.bento-box .cta-text {
+.bento-widget-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.bento-widget-list li:last-child {
+  border-bottom: none;
+}
+
+.team-name {
+  font-weight: 600;
+  color: var(--text-primary);
   display: block;
-  margin-top: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.team-details {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.team-score {
+  font-family: var(--font-display);
   font-weight: 700;
-  color: var(--primary-color);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums; /* Aligns numbers nicely */
+}
+
+.cta-text {
+  margin-top: auto; /* Pushes to bottom of card */
+  padding-top: 1.5rem;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

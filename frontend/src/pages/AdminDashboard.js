@@ -203,8 +203,7 @@ function AdminDashboard() {
   );
 
   const renderVenmoEditor = () => (
-    // ... (This function is unchanged)
-    <table className="venmo-table">
+    <table className="standings-table">
       <thead>
         <tr>
           <th>Team Name</th>
