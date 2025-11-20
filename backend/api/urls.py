@@ -13,6 +13,7 @@ urlpatterns = [
     # --- Widgets ---
     path('widget/weekly-winner/', views.WeeklyWinner.as_view(), name='widget-weekly-winner'),
     path('widget/power-rankings/', views.PowerRankings.as_view(), name='widget-power-rankings'),
+    path('widget/common-players/', views.CommonPlayersWidget.as_view(), name='widget-common-players'),
     
     # --- ADMIN COMMANDS ---
     path('admin/run-sync/', views.RunSyncSleeper.as_view(), name='admin-run-sync'),

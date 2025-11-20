@@ -15,7 +15,8 @@ from .serializers import (
     TeamSerializer, 
     WeeklyScoreSerializer, 
     UltimatePlayoffEntrySerializer, 
-    PayoutSerializer
+    PayoutSerializer,
+    CommonPlayerSerializer
 )
 from rest_framework.permissions import IsAdminUser
 from django.core.management import call_command
@@ -23,7 +24,7 @@ from django.http import JsonResponse
 import requests
 from django.db.models import Max
 from django.utils import timezone
-from .models import WeeklyScore, Team, League
+from .models import WeeklyScore, Team, League, CommonPlayer
 
 # Create your views here.
 
@@ -312,3 +313,15 @@ class TogglePlayoffFlag(APIView):
             })
         except Exception as e:
             return Response({"status": "error", "message": str(e)}, status=500)
+        
+
+class CommonPlayersWidget(APIView):
+    """
+    Returns the top 10 most common players in the playoffs.
+    """
+    def get(self, request, format=None):
+        # Get all records (the script already limits it to top 10)
+        # Sort by rank just to be safe
+        common_players = CommonPlayer.objects.all().order_by('rank')
+        serializer = CommonPlayerSerializer(common_players, many=True)
+        return Response(serializer.data)

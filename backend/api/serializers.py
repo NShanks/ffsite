@@ -7,7 +7,8 @@ from .models import (
     Team, 
     WeeklyScore, 
     UltimatePlayoffEntry, 
-    Payout
+    Payout,
+    CommonPlayer
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -86,3 +87,9 @@ class PayoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payout
         fields = ['id', 'recipient', 'amount', 'reason', 'season', 'is_paid']
+
+
+class CommonPlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonPlayer
+        fields = ['rank', 'player_name', 'position', 'nfl_team', 'count', 'average_score']

@@ -95,3 +95,15 @@ class Payout(models.Model):
     def __str__(self):
         # Shows "Nic - $5.00 (Weekly Winner Week 5)" in admin
         return f"{self.recipient.user.username} - ${self.amount} ({self.reason})"
+
+class CommonPlayer(models.Model):
+    # This table is wiped and rewritten every day by the sync script
+    rank = models.IntegerField()
+    player_name = models.CharField(max_length=100)
+    position = models.CharField(max_length=10)
+    nfl_team = models.CharField(max_length=10, null=True, blank=True)
+    count = models.IntegerField(help_text="How many playoff teams have this player")
+    average_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return f"#{self.rank} {self.player_name} ({self.count})"

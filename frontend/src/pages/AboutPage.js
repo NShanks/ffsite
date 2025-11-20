@@ -1,11 +1,12 @@
 import React from 'react';
+import './AboutPage.css'
 
 function AboutPage() {
   return (
     <div style={{ padding: '1rem 2rem' }}>
       <h1>About the IYKYK League</h1>
 
-      <div style={{ maxWidth: '800px' }}>
+      <div className='about-container'>
         <h2>Our Mission</h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
