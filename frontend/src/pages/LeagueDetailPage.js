@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './LeagueDetailPage.css'; // 1. Import our new CSS
+import PlayerSticker from '../components/PlayerSticker';
 
 function LeagueDetailPage() {
   const { id } = useParams(); // Get the league ID from the URL
@@ -69,6 +70,7 @@ function LeagueDetailPage() {
             <th>Team Name</th>
             <th>Record (W-L-T)</th>
             <th>Points For</th>
+            <th>Top Players</th>
           </tr>
         </thead>
         <tbody>
@@ -79,6 +81,17 @@ function LeagueDetailPage() {
               <td>{team.team_name}</td>
               <td>{team.wins}-{team.losses}-{team.ties}</td>
               <td>{team.points_for}</td>
+              <td>
+              <div className="player-avatars">
+                {team.top_three_players && team.top_three_players.map(player => (
+                  <PlayerSticker 
+                    key={player.id} 
+                    player={player} 
+                    detail={`${player.total_points.toFixed(1)} pts`}
+                  />
+                ))}
+              </div>
+            </td>
             </tr>
           ))}
         </tbody>

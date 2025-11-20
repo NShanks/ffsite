@@ -58,7 +58,8 @@ class TeamSerializer(serializers.ModelSerializer):
             'wins',
             'losses',
             'ties',
-            'points_for'
+            'points_for',
+            'top_three_players'
         ]
 
 
@@ -92,4 +93,4 @@ class PayoutSerializer(serializers.ModelSerializer):
 class CommonPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommonPlayer
-        fields = ['rank', 'player_name', 'position', 'nfl_team', 'count', 'average_score']
+        fields = ['rank', 'player_name', 'player_id', 'position', 'nfl_team', 'count', 'average_score']

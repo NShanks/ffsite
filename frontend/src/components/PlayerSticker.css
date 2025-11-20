@@ -1,0 +1,129 @@
+/* frontend/src/components/PlayerSticker.css */
+
+/* The Container for a single sticker */
+.sticker-wrapper {
+  position: relative;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  cursor: pointer;
+  
+  /* 1. DYNAMIC ROTATION (Set via React inline-style) */
+  transform: rotate(var(--rotation));
+  
+  /* 2. THE SLAM EFFECT (Transition OUT) */
+  /* Gravity Curve: Starts slow, accelerates, hits hard */
+  transition: transform 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045), z-index 0s 0.3s;
+}
+
+/* --- THE REAL PHOTO --- */
+.sticker-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --- THE STICKER OUTLINE --- */
+.sticker-bg {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  
+  /* Positioning */
+  top: 0; left: 0; transform: none;
+  
+  /* 3. THE SHADOW STATE (Resting) */
+  filter: 
+    brightness(0) invert(1) 
+    drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white)
+    drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white)
+    drop-shadow(1.5px 1.5px 0 white) drop-shadow(-1.5px 1.5px 0 white)
+    drop-shadow(1.5px -1.5px 0 white) drop-shadow(-1.5px -1.5px 0 white)
+    drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  
+  opacity: 1; 
+  transition: filter 0.3s ease;
+}
+
+/* --- HOVER & FOCUS EFFECTS --- */
+
+/* 1. Move the Wrapper */
+/* We add .sticker-wrapper:focus to trigger on tap/click */
+.sticker-wrapper:hover,
+.sticker-wrapper:focus {
+  z-index: 10;
+  /* Straighten out (0deg), Scale Up, Lift */
+  transform: scale(1.4) translateY(-10px) rotate(0deg);
+  
+  /* Remove the default blue browser outline when clicked */
+  outline: none; 
+  
+  /* Spring Curve, how fast it lifts up */
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 2. Grow the Shadow */
+.sticker-wrapper:hover .sticker-bg,
+.sticker-wrapper:focus .sticker-bg {
+  filter: 
+    brightness(0) invert(1) 
+    drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white)
+    drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white)
+    drop-shadow(1.5px 1.5px 0 white) drop-shadow(-1.5px 1.5px 0 white)
+    drop-shadow(1.5px -1.5px 0 white) drop-shadow(-1.5px -1.5px 0 white)
+    /* Big Soft Shadow */
+    drop-shadow(0 10px 10px rgba(0,0,0,0.4));
+
+  transition: filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- TOOLTIP --- */
+.sticker-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 20;
+  
+  transition: all 0.2s ease;
+}
+
+.sticker-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.sticker-wrapper:hover .sticker-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Show tooltip on hover OR focus */
+.sticker-wrapper:hover .sticker-tooltip,
+.sticker-wrapper:focus .sticker-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

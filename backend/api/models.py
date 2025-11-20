@@ -54,6 +54,7 @@ class Team(models.Model):
     losses = models.IntegerField(default=0)
     ties = models.IntegerField(default=0)
     points_for = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    top_three_players = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         if self.owner:
@@ -100,6 +101,7 @@ class CommonPlayer(models.Model):
     # This table is wiped and rewritten every day by the sync script
     rank = models.IntegerField()
     player_name = models.CharField(max_length=100)
+    player_id = models.CharField(max_length=50, default="")
     position = models.CharField(max_length=10)
     nfl_team = models.CharField(max_length=10, null=True, blank=True)
     count = models.IntegerField(help_text="How many playoff teams have this player")

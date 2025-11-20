@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './HomePage.css'; 
+import './HomePage.css';
+import PlayerSticker from '../components/PlayerSticker';
 
 function HomePage() {
   const [weeklyWinners, setWeeklyWinners] = useState([]);
@@ -60,6 +61,7 @@ function HomePage() {
   const PowerRankingsBox = () => (
     <div className="bento-box">
       <h2>Association Power Rankings</h2>
+      Top total scores
       {isLoading ? <p>Loading...</p> : (
         <ol className="bento-widget-list">
           {powerRankings.map((team, index) => (
@@ -79,39 +81,31 @@ function HomePage() {
   // --- 3. NEW COMPONENT: Common Players Box ---
   const CommonPlayersBox = () => (
     <div className="bento-box">
-      <h2>Playoff Meta (Top Players)</h2>
+      <h2>Playoff Meta</h2>
+      <br/>
+      (Players on the most Playoff Teams)
       {isLoading ? <p>Loading...</p> : 
        commonPlayers.length === 0 ? <p>No data available yet.</p> : (
-        <ol className="bento-widget-list">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
           {commonPlayers.map((player) => (
-            <li key={player.rank}>
-              <div>
-                <span className="team-name">
-                  {player.rank}. {player.player_name}
-                </span>
-                <span className="team-details">
-                  {player.position} - {player.nfl_team || 'N/A'}
-                </span>
-              </div>
-              <div>
-                <span className="team-name" style={{fontSize: '1.25rem'}}>
-                  {Number(player.average_score).toFixed(1)} ppg
-                </span>
-                <span className="team-details">
-                  {player.count} playoff teams
-                </span>
-              </div>
-              {/* <div style={{textAlign: 'right'}}>
-                <span className="team-score" style={{fontSize: '1.25rem'}}>
-                  {player.count} Playoff Teams
-                </span>
-                <span className="team-score">
+            <PlayerSticker 
+              key={player.rank}
+              player={{
+                name: player.player_name,
+                position: player.position,
+                // We construct the URL using the ID from the backend
+                avatar_url: `https://sleepercdn.com/content/nfl/players/${player.player_id}.jpg`
+              }}
+              detail={
+                <>
+                  {player.count} rosters
+                  <br />
                   {Number(player.average_score).toFixed(1)} avg
-                </span>
-              </div> */}
-            </li>
+                </>
+              }
+            />
           ))}
-        </ol>
+        </div>
       )}
     </div>
   );
@@ -122,7 +116,7 @@ function HomePage() {
       <header className="home-hero">
         <h1>Welcome to the IYKYK League Hub</h1>
         <p>
-          The central source of truth for all 7 leagues. Track standings, 
+          The central source of truth for all 6 leagues. Track standings, 
           follow the BIG Playoff, and see who owes who.
         </p>
       </header>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DashboardPage.css'; // Import our new tab styles
 import './LeagueDetailPage.css'; // We'll reuse the table styles!
+import PlayerSticker from '../components/PlayerSticker';
 
 function DashboardPage() {
   // --- State ---
@@ -78,6 +79,7 @@ function DashboardPage() {
             <th>Team Name</th>
             <th>Record (W-L-T)</th>
             <th>Points For</th>
+            <th>Top Players</th>
           </tr>
         </thead>
         <tbody>
@@ -87,6 +89,17 @@ function DashboardPage() {
               <td>{team.team_name}</td>
               <td>{team.wins}-{team.losses}-{team.ties}</td>
               <td>{team.points_for}</td>
+              <td>
+                <div className="player-avatars">
+                  {team.top_three_players && team.top_three_players.map(player => (
+                    <PlayerSticker 
+                      key={player.id} 
+                      player={player} 
+                      detail={`${player.total_points.toFixed(1)} pts`}
+                    />
+                  ))}
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

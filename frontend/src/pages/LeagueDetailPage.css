@@ -74,3 +74,9 @@
 .standings-table tbody tr:hover {
   background-color: var(--glass-bg-hover);
 }
+/* Container for the faces */
+.player-avatars {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
