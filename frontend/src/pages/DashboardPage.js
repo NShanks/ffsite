@@ -79,7 +79,7 @@ function DashboardPage() {
             <th>Team Name</th>
             <th>Record (W-L-T)</th>
             <th>Points For</th>
-            <th>Top Players</th>
+            <th style={{ textAlign: "center" }}>Top Players</th>
           </tr>
         </thead>
         <tbody>

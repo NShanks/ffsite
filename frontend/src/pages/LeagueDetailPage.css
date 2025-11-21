@@ -11,7 +11,7 @@
   box-shadow: var(--glass-shadow);
   
   border-radius: 20px;
-  overflow: hidden;
+  /* overflow: hidden; */
   
   /* Add margin-top to separate it from the tabs */
   margin-top: 2rem; 
@@ -43,6 +43,15 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
+}
+
+.standings-table th:first-child {
+  border-top-left-radius: 20px;
+}
+
+/* Top-right corner */
+.standings-table th:last-child {
+  border-top-right-radius: 20px;
 }
 
 [data-theme="dark"] .standings-table th {
@@ -79,4 +88,5 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  justify-content: center;
 }
