@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './DashboardPage.css'; // Import our new tab styles
 import './LeagueDetailPage.css'; // We'll reuse the table styles!
 import PlayerSticker from '../components/PlayerSticker';
@@ -21,7 +21,7 @@ function DashboardPage() {
   // --- Effects ---
   // Effect 1: Fetch the list of all leagues (runs only ONCE)
   useEffect(() => {
-    axios.get('http://localhost:8000/api/leagues/')
+    api.get('/leagues/')
       .then(response => {
         setLeagues(response.data);
         // After fetching leagues, set the *first one* as default
@@ -46,7 +46,7 @@ function DashboardPage() {
 
     setIsLoadingTeams(true); // Show loading spinner for the table
 
-    axios.get(`http://localhost:8000/api/teams/?league=${selectedLeagueId}`)
+    api.get(`/teams/?league=${selectedLeagueId}`)
       .then(response => {
         setTeams(response.data); // Set the new standings
         setIsLoadingTeams(false);

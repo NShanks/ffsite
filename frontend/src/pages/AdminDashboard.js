@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './AdminDashboard.css'; // Import our admin styles
 import './DashboardPage.css'; // Reuse the *league* tab styles
 import './LeagueDetailPage.css'; // Reuse the table styles
 
 // --- Secure Axios Instance ---
-const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
-});
+// const api = axios.create({
+//   baseURL: 'http://localhost:8000/api',
+// });
 
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+// api.interceptors.request.use(config => {
+//   const token = localStorage.getItem('access_token');
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// }, error => {
+//   return Promise.reject(error);
+// });
 
 // --- React Component Starts Here ---
 

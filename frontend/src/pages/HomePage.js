@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import './HomePage.css';
 import PlayerSticker from '../components/PlayerSticker';
 
@@ -16,11 +16,10 @@ function HomePage() {
   useEffect(() => {
     const fetchWidgetData = async () => {
       try {
-        // --- 2. NEW API CALL ---
         const [winnerRes, rankingsRes, commonRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/widget/weekly-winner/'),
-          axios.get('http://localhost:8000/api/widget/power-rankings/'),
-          axios.get('http://localhost:8000/api/widget/common-players/')
+          api.get('/widget/weekly-winner/'),
+          api.get('/widget/power-rankings/'),
+          api.get('/widget/common-players/')
         ]);
         
         setWeeklyWinners(winnerRes.data);

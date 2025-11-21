@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './LeagueDetailPage.css'; // We can reuse the same table style!
 
 function PlayoffPage() {
@@ -9,7 +9,7 @@ function PlayoffPage() {
 
   useEffect(() => {
     // 1. Fetch data from our new API endpoint
-    axios.get('http://localhost:8000/api/playoff-entries/')
+    api.get('/playoff-entries/')
       .then(response => {
         // 2. Group the data by week (e.g., { 15: [...], 16: [...] })
         const groupedData = groupEntriesByWeek(response.data);

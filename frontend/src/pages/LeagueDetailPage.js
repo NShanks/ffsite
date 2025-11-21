@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import './LeagueDetailPage.css'; // 1. Import our new CSS
 import PlayerSticker from '../components/PlayerSticker';
 
@@ -16,13 +16,13 @@ function LeagueDetailPage() {
   useEffect(() => {
     const fetchLeagueData = () => {
       // 3. Define our two API endpoints
-      const leagueDetailsUrl = `http://localhost:8000/api/leagues/${id}/`;
-      const teamsStandingsUrl = `http://localhost:8000/api/teams/?league=${id}`;
+      const leagueDetailsUrl = `/leagues/${id}/`;
+      const teamsStandingsUrl = `/teams/?league=${id}`;
 
       // 4. Use Promise.all to fetch both at the same time for speed
       Promise.all([
-        axios.get(leagueDetailsUrl),
-        axios.get(teamsStandingsUrl)
+        api.get(leagueDetailsUrl),
+        api.get(teamsStandingsUrl)
       ])
       .then(([leagueResponse, teamsResponse]) => {
         // 5. When both are successful, update our state
