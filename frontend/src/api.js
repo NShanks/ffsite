@@ -1,19 +1,16 @@
 import axios from 'axios';
 
-// 1. Determine the correct URL based on the environment
-// If we are on the live site (production), use the Render URL.
-// If we are on your computer (development), use localhost.
+// 2. Define the URL
 const BASE_URL = process.env.NODE_ENV === 'production'
-  ? process.env.REACT_APP_API_URL // We will set this in Cloudflare later
+  ? 'https://ffsite-x1bq.onrender.com/api'
   : 'http://localhost:8000/api';
 
-// 2. Create the Axios instance
+// 3. Create the instance
 const api = axios.create({
   baseURL: BASE_URL,
 });
 
-// 3. Add the Interceptor (Automatically adds the Token)
-// This logic was previously inside AdminDashboard.js
+// 4. Add the Interceptor
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('access_token');
   if (token) {
