@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         # --- 2. DOWNLOAD PLAYER DB ONCE ---
         self.stdout.write("Downloading Sleeper Player Database (Names & Positions)...")
-        player_lookup = {} # Maps ID -> {name, position, team}
+        player_lookup = {} 
         try:
             p_res = requests.get("https://api.sleeper.app/v1/players/nfl")
             p_data = p_res.json()
@@ -64,15 +64,12 @@ class Command(BaseCommand):
                 league_data = league_response.json()
                 current_season = league_data.get('season')
 
-                # ----------------------------------------------------
-                # STEP 1: SYNC USERS
-                # ----------------------------------------------------
+                # STEP 1: USERS
                 self.stdout.write('Syncing users...')
                 users_response = requests.get(users_url)
                 users_response.raise_for_status()
                 sleeper_users = users_response.json()
 
-                # Build team name map
                 team_name_map = {}
                 for user_data in sleeper_users:
                     user_id = user_data.get('user_id')
@@ -80,7 +77,6 @@ class Command(BaseCommand):
                         team_name = user_data.get('metadata', {}).get('team_name')
                         team_name_map[user_id] = team_name
 
-                # Sync Profiles
                 for user_data in sleeper_users:
                     sleeper_id = user_data.get('user_id')
                     display_name = user_data.get('display_name', 'SleeperUser')
@@ -106,9 +102,7 @@ class Command(BaseCommand):
                         profile = MemberProfile.objects.create(user=user, sleeper_id=sleeper_id, full_name=display_name)
                 self.stdout.write(self.style.SUCCESS('  Users synced successfully.'))
 
-                # ----------------------------------------------------
-                # STEP 2: SYNC TEAMS & STANDINGS
-                # ----------------------------------------------------
+                # STEP 2: TEAMS
                 self.stdout.write('Syncing teams...')
                 rosters_response = requests.get(rosters_url)
                 rosters_response.raise_for_status()
@@ -125,7 +119,6 @@ class Command(BaseCommand):
                         except MemberProfile.DoesNotExist:
                             pass
 
-                    # Resolve Team Name
                     team_name = None
                     if owner_sleeper_id: team_name = team_name_map.get(owner_sleeper_id)
                     if not team_name and roster_data.get('metadata') and roster_data['metadata'].get('team_name'):
@@ -151,20 +144,21 @@ class Command(BaseCommand):
                         )
                 self.stdout.write(self.style.SUCCESS('  Teams synced successfully.'))
 
-                # ----------------------------------------------------
-                # STEP 3: SYNC SCORES & CALCULATE TOP 3
-                # ----------------------------------------------------
+                # STEP 3: SCORES
                 self.stdout.write('Syncing scores and tracking player stats...')
-                
-                # Accumulator: roster_id -> { player_id: total_points }
                 roster_player_points = defaultdict(lambda: defaultdict(float))
 
                 for week in range(1, 19):
+                    # --- VERBOSE LOGGING RESTORED ---
+                    self.stdout.write(f'  > Checking Week {week}...') 
+                    
                     m_url = f"https://api.sleeper.app/v1/league/{league.sleeper_league_id}/matchups/{week}"
                     m_res = requests.get(m_url)
                     matchups = m_res.json()
                     
-                    if not matchups: break 
+                    if not matchups: 
+                        self.stdout.write(f'    No data for Week {week}. Stopping weekly sync.')
+                        break 
 
                     for m in matchups:
                         rid = m.get('roster_id')
@@ -185,13 +179,10 @@ class Command(BaseCommand):
                         for pid, score in p_points.items():
                             roster_player_points[rid][pid] += score
 
-                # Save Top 3 Players per Team
                 self.stdout.write('  Calculating Top 3 players per team...')
                 for rid, players_dict in roster_player_points.items():
                     try:
                         team = Team.objects.get(league=league, sleeper_roster_id=rid)
-                        
-                        # Sort by points (descending)
                         sorted_players = sorted(players_dict.items(), key=lambda x: x[1], reverse=True)
                         
                         top_3 = []
@@ -211,9 +202,7 @@ class Command(BaseCommand):
 
                 self.stdout.write(self.style.SUCCESS('  Scores and Top 3 players synced.'))
 
-                # ----------------------------------------------------
-                # STEP 4: SYNC PLAYOFF LATCH
-                # ----------------------------------------------------
+                # STEP 4: PLAYOFF LATCH
                 self.stdout.write('Syncing playoff bracket...')
                 if current_league_week >= PLAYOFF_START_WEEK:
                     has_playoff_started = UltimatePlayoffEntry.objects.filter(team__league=league, season=current_season).exists()
@@ -241,9 +230,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.WARNING(f'  League is in Week {current_league_week}. Playoffs start Week {PLAYOFF_START_WEEK}. Skipping sync.'))
                     Team.objects.filter(league=league).update(made_league_playoffs=False)
 
-                # ----------------------------------------------------
-                # DATA GATHERING FOR STEP 5 (COMMON PLAYERS)
-                # ----------------------------------------------------
+                # DATA GATHERING FOR STEP 5
                 target_roster_ids = set()
                 if current_league_week < PLAYOFF_START_WEEK:
                     try:
@@ -267,33 +254,24 @@ class Command(BaseCommand):
             except requests.exceptions.RequestException as e:
                 self.stdout.write(self.style.ERROR(f'Error processing league {league.name}: {e}'))
 
-        # ====================================================
-        # STEP 5: CALCULATE AND SAVE COMMON PLAYERS
-        # ====================================================
+        # STEP 5: COMMON PLAYERS
         self.stdout.write('\n--- Step 5: Calculating Most Common Playoff Players ---')
-        
         if not all_playoff_player_ids:
             self.stdout.write(self.style.WARNING("No playoff player data found to analyze."))
         else:
             player_counts = Counter(all_playoff_player_ids)
             top_ids_tuples = player_counts.most_common(15)
-            
             if top_ids_tuples:
                 self.stdout.write("Downloading Sleeper Player Database (Names)...")
                 try:
                     player_db_res = requests.get("https://api.sleeper.app/v1/players/nfl")
                     player_db = player_db_res.json()
-                    
                     processed_players = []
-                    
                     for pid, count in top_ids_tuples:
                         player_info = player_db.get(pid)
                         if not player_info: continue
-                        
                         position = player_info.get('position')
                         if position == 'DEF': continue 
-
-                        # Fetch Stats
                         avg_score = 0.0
                         try:
                             if current_nfl_season:
@@ -303,23 +281,18 @@ class Command(BaseCommand):
                                     stats_data = stats_res.json()
                                     total_points = 0.0
                                     weeks_played = 0
-                                    
                                     for week_key, week_data in stats_data.items():
                                         if not week_data: continue
                                         stats = week_data.get('stats')
                                         if not stats: continue
-                                        
-                                        # Safe get
                                         week_points = stats.get('pts_ppr', 0.0)
                                         if week_points > 0: 
                                             total_points += float(week_points)
                                             weeks_played += 1
-                                    
                                     if weeks_played > 0:
                                         avg_score = total_points / weeks_played
                         except Exception as e:
                             self.stdout.write(self.style.WARNING(f"Stats error for {pid}: {e}"))
-
                         processed_players.append({
                             'id': pid,
                             'player_name': f"{player_info.get('first_name')} {player_info.get('last_name')}",
@@ -328,12 +301,8 @@ class Command(BaseCommand):
                             'count': count,
                             'average_score': avg_score
                         })
-
-                    # Sort: Count Descending -> Avg Score Descending
                     processed_players.sort(key=lambda x: (-x['count'], -x['average_score']))
-
                     CommonPlayer.objects.all().delete()
-                    
                     for i, p_data in enumerate(processed_players[:10]):
                         CommonPlayer.objects.create(
                             rank=i+1,
@@ -345,7 +314,6 @@ class Command(BaseCommand):
                             average_score=p_data['average_score']
                         )
                         self.stdout.write(f"  #{i+1}: {p_data['player_name']} ({p_data['count']} rosters, {p_data['average_score']:.1f} avg)")
-                            
                     self.stdout.write(self.style.SUCCESS("Common Players table updated successfully!"))
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(f"Error processing player database: {e}"))

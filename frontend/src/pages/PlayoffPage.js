@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api';
-import './LeagueDetailPage.css'; // We can reuse the same table style!
+import api from '../api'; // Use our secure helper
+import './DashboardPage.css'; // Reuse the Pill Tabs styles
+import './LeagueDetailPage.css'; // Reuse the Glass Table styles
+import './PlayoffPage.css'; // New status styles
 
 function PlayoffPage() {
-  const [playoffData, setPlayoffData] = useState({});
+  // State
+  const [playoffData, setPlayoffData] = useState({}); // { 15: [...], 16: [...] }
+  const [availableWeeks, setAvailableWeeks] = useState([]); // [15, 16]
+  const [activeTab, setActiveTab] = useState(null); // Current selected week (e.g. 16)
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 1. Fetch data from our new API endpoint
     api.get('/playoff-entries/')
       .then(response => {
-        // 2. Group the data by week (e.g., { 15: [...], 16: [...] })
-        const groupedData = groupEntriesByWeek(response.data);
-        setPlayoffData(groupedData);
+        // 1. Group the raw list by week
+        const grouped = groupEntriesByWeek(response.data);
+        setPlayoffData(grouped);
+
+        // 2. Find which weeks exist and sort them
+        const weeks = Object.keys(grouped).map(Number).sort((a, b) => a - b);
+        setAvailableWeeks(weeks);
+
+        // 3. Default to the LATEST week available
+        if (weeks.length > 0) {
+          setActiveTab(weeks[weeks.length - 1]);
+        }
+        
         setIsLoading(false);
       })
       .catch(error => {
@@ -23,68 +38,112 @@ function PlayoffPage() {
       });
   }, []);
 
-  // 3. This is a helper function to group our data
+  // Helper: Group flat list into object by week
   const groupEntriesByWeek = (entries) => {
     return entries.reduce((acc, entry) => {
       const week = entry.playoff_week;
       if (!acc[week]) {
-        acc[week] = []; // Create an array for this week if it doesn't exist
+        acc[week] = [];
       }
       acc[week].push(entry);
       return acc;
     }, {});
   };
 
-  // 4. Handle loading and error states
+  // Helper: Determine the status badge logic
+  const getStatusBadge = (entry) => {
+    // 1. If explicitly eliminated in DB
+    if (entry.is_eliminated) {
+      return <span className="status-badge status-eliminated">Eliminated</span>;
+    }
+
+    // 2. Check if this is the "Current" week (the max week available)
+    const maxWeek = Math.max(...availableWeeks);
+    
+    if (entry.playoff_week === maxWeek) {
+      // If they aren't eliminated and it's the current week, they are fighting!
+      return <span className="status-badge status-active">Active</span>;
+    } else {
+      // If they weren't eliminated in an OLD week, they moved on.
+      return <span className="status-badge status-advanced">Advanced</span>;
+    }
+  };
+
+  // --- Render ---
+
   if (isLoading) {
-    return <div style={{ padding: '1rem 2rem' }}><p>Loading playoff data...</p></div>;
+    return <div className="playoff-container"><p>Loading playoff data...</p></div>;
   }
 
   if (error) {
-    return <div style={{ padding: '1rem 2rem' }}><p style={{ color: 'red' }}>Error: {error.message}</p></div>;
+    return <div className="playoff-container"><p style={{ color: 'red' }}>Error: {error.message}</p></div>;
   }
 
-  const weeks = Object.keys(playoffData);
+  if (availableWeeks.length === 0) {
+    return (
+      <div className="playoff-container">
+        <div className="glass-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <h1>The BIG Playoff</h1>
+          <p>The bracket has not started yet.</p>
+          <p>Check back after Week 15 begins!</p>
+        </div>
+      </div>
+    );
+  }
 
-  // 5. Render the final page!
+  // Get the list for the currently selected tab
+  const currentEntries = playoffData[activeTab] || [];
+
   return (
-    <div style={{ padding: '1rem 2rem' }}>
-      <h1>BIG Playoff Leaderboard</h1>
+    <div className="playoff-container">
+      <div className="playoff-header">
+        <h1>BIG Playoff Leaderboard</h1>
+      </div>
 
-      {weeks.length === 0 && !isLoading && (
-        <p>
-          The BIG Playoff has not started yet. Check back after Week 15!
-        </p>
-      )}
+      {/* 1. Week Tabs (Reusing Dashboard Styles) */}
+      <div className="tabs-container">
+        <div className="league-tabs">
+          {availableWeeks.map(week => (
+            <button
+              key={week}
+              className={`tab ${activeTab === week ? 'active' : ''}`}
+              onClick={() => setActiveTab(week)}
+            >
+              Week {week}
+            </button>
+          ))}
+        </div>
 
-      {/* 6. Loop over each week and create a separate table for it */}
-      {weeks.map(week => (
-        <div key={week}>
-          <h2>Week {week}</h2>
+        {/* 2. The Table (Reusing LeagueDetail Styles) */}
+        <div className="standings-content">
           <table className="standings-table">
             <thead>
               <tr>
                 <th>Rank</th>
-                <th>Team Name</th>
+                <th>Team</th>
                 <th>Score</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {playoffData[week].map((entry, index) => (
+              {currentEntries.map((entry, index) => (
                 <tr key={entry.id}>
                   <td>{entry.final_rank || index + 1}</td>
-                  <td>{entry.team}</td>
-                  <td>{entry.week_score}</td>
-                  <td style={{ color: entry.is_eliminated ? 'red' : 'green' }}>
-                    {entry.is_eliminated ? 'Eliminated' : 'Active'}
+                  <td>
+                    <span style={{ fontWeight: '600' }}>{entry.team}</span>
+                  </td>
+                  <td style={{ fontSize: '1.1rem' }}>
+                    {entry.week_score}
+                  </td>
+                  <td>
+                    {getStatusBadge(entry)}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      ))}
+      </div>
     </div>
   );
 }
