@@ -13,13 +13,13 @@
   --text-2xl: 2rem;
   --text-3xl: 3rem;
 
-  /* Tracking (Letter Spacing) - Apple Style */
+  /* Tracking (Letter Spacing) */
   --tracking-tight: -0.03em;
   --tracking-normal: -0.01em;
   --tracking-wide: 0.02em;
 
   /* --- 2. COLOR PALETTE (OKLCH) --- */
-  /* Brand Colors - A Deep, Vibrant "iMessage" Blue */
+  /* Brand Colors - A Deep, Vibrant Blue */
   --brand-primary: oklch(0.55 0.2 260);
   --brand-secondary: oklch(0.65 0.18 260);
   
@@ -28,14 +28,14 @@
   --color-error: oklch(0.6 0.2 25);
   
   /* --- 3. LIGHT THEME VARIABLES --- */
-  --bg-app: oklch(0.98 0.01 260); /* Very subtle tint */
+  --bg-app: oklch(0.98 0.01 260);
   
   /* Text */
   --text-primary: oklch(0.15 0.02 260);   /* Almost Black */
   --text-secondary: oklch(0.45 0.04 260); /* Grey */
   --text-tertiary: oklch(0.65 0.04 260);  /* Light Grey */
 
-  /* THE LIQUID GLASS RECIPE (Light) */
+  /* THE LIQUID GLASS RECIPE */
   /* The background needs opacity to let the blur work */
   --glass-bg: rgba(255, 255, 255, 0.65); 
   --glass-bg-hover: rgba(255, 255, 255, 0.8);
@@ -66,7 +66,7 @@
   --text-secondary: oklch(0.7 0.03 260);
   --text-tertiary: oklch(0.5 0.03 260);
 
-  /* THE LIQUID GLASS RECIPE (Dark) */
+  /* THE LIQUID GLASS RECIPE */
   --glass-bg: rgba(30, 30, 35, 0.6);
   --glass-bg-hover: rgba(40, 40, 45, 0.7);
   

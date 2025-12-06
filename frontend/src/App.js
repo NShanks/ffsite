@@ -14,23 +14,22 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 
 function App() {
-  // 2. Setup theme state
-  // We check localStorage for a saved theme, or default to 'light'
+  // Check localStorage for a saved theme, or default to 'light'
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-  // 3. Create a function to toggle the theme
+  // Create a function to toggle the theme
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   };
 
-  // 4. Create an effect that runs when 'theme' changes
+  // Create an effect that runs when 'theme' changes
   useEffect(() => {
-    // 4a. Update the <html> tag's data-theme attribute
+    // Update the <html> tag's data-theme attribute
     document.documentElement.setAttribute('data-theme', theme);
-    // 4b. Save the user's preference in localStorage
+    // Save the user's preference in localStorage
     localStorage.setItem('theme', theme);
-  }, [theme]); // This effect depends on the 'theme' state
+  }, [theme]); // This effect's running depends on the 'theme' state
 
   return (
     <div className="App">
@@ -44,7 +43,6 @@ function App() {
         <Route path="/playoffs" element={<PlayoffPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<AboutPage />} />
-
         <Route element={<ProtectedRoute />}>
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Route>

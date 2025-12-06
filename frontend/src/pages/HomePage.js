@@ -7,10 +7,7 @@ import PlayerSticker from '../components/PlayerSticker';
 function HomePage() {
   const [weeklyWinners, setWeeklyWinners] = useState([]);
   const [powerRankings, setPowerRankings] = useState([]);
-  
-  // --- 1. NEW STATE ---
   const [commonPlayers, setCommonPlayers] = useState([]);
-  
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +21,7 @@ function HomePage() {
         
         setWeeklyWinners(winnerRes.data);
         setPowerRankings(rankingsRes.data);
-        setCommonPlayers(commonRes.data); // Set the data
+        setCommonPlayers(commonRes.data);
       } catch (error) {
         console.error("Error fetching widget data:", error);
       }
@@ -37,8 +34,12 @@ function HomePage() {
   const WeeklyWinnersBox = () => (
     <div className="bento-box">
       <h2>Last Week's High Scorers</h2>
-      {isLoading ? <p>Loading...</p> : 
-      !weeklyWinners || weeklyWinners.length === 0 ? <p>No scores found for last week.</p> : (
+      {
+        isLoading // Check if loading, default state is True
+          ? <p>Loading... (This could take 45 seconds - 2 minutes. Thanks for your patience!</p> // True? Show this line
+            : !weeklyWinners || weeklyWinners.length === 0 // False? Okay it's done loading. Now checking if weeklyWinners is falsy.
+              ? <p>No scores found for last week.</p> // Yes weeklyWinners is falsy? Something went wrong. This IS the initial state but once the API is called, it shouldn't be.
+                : ( // No, weekly winners exists? Show this code vvv
         <div>
           <h3>Winners (Week {weeklyWinners[0].week})</h3>
           <ul className="bento-widget-list">
@@ -59,7 +60,7 @@ function HomePage() {
 
   const PowerRankingsBox = () => (
     <div className="bento-box">
-      <h2>Association Power Rankings</h2>
+      <h2>Power Rankings</h2>
       Top total scores
       {isLoading ? <p>Loading...</p> : (
         <ol className="bento-widget-list">
@@ -77,14 +78,16 @@ function HomePage() {
     </div>
   );
 
-  // --- 3. NEW COMPONENT: Common Players Box ---
   const CommonPlayersBox = () => (
     <div className="bento-box">
       <h2>Playoff Meta</h2>
       <br/>
       (Players on the most Playoff Teams)
-      {isLoading ? <p>Loading...</p> : 
-       commonPlayers.length === 0 ? <p>No data available yet.</p> : (
+      {isLoading
+      ? <p>Loading...</p>
+        : commonPlayers.length === 0
+          ? <p>No data available yet.</p>
+            : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
           {commonPlayers.map((player) => (
             <PlayerSticker 
@@ -111,7 +114,6 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      
       <header className="home-hero">
         <h1>Welcome to the IYKYK League Hub</h1>
         <p>
