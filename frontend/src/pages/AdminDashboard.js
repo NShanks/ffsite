@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import './AdminDashboard.css'; // Import our admin styles
-import './DashboardPage.css'; // Reuse the *league* tab styles
-import './LeagueDetailPage.css'; // Reuse the table styles
+import './AdminDashboard.css';
+import './DashboardPage.css';
+import './LeagueDetailPage.css';
 
 // --- Secure Axios Instance ---
 // const api = axios.create({
@@ -19,25 +19,18 @@ import './LeagueDetailPage.css'; // Reuse the table styles
 //   return Promise.reject(error);
 // });
 
-// --- React Component Starts Here ---
 
 function AdminDashboard() {
-  // --- State ---
   const [activeTab, setActiveTab] = useState('commands');
   const [leagues, setLeagues] = useState([]);
   const [selectedLeagueId, setSelectedLeagueId] = useState(null);
-  const [teams, setTeams] = useState([]); // This will now be used by 3 tabs
-  
-  // We no longer need the 'allMembers' state!
-  
+  const [teams, setTeams] = useState([]);  
   const [venmoInputs, setVenmoInputs] = useState({});
   const [commandLoading, setCommandLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [dataLoading, setDataLoading] = useState(true);
 
   // --- Data Fetching Effects ---
-  
-  // Effect 1: Fetch all leagues (for the sub-tabs)
   useEffect(() => {
     setDataLoading(true);
     api.get('/leagues/')
@@ -55,13 +48,10 @@ function AdminDashboard() {
       });
   }, []);
 
-  // Effect 2: Fetch data based on the *active main tab*
+  // Fetch data based on the *active main tab*
   useEffect(() => {
-    setTeams([]); // Reset teams when tab changes
+    setTeams([]);
     setStatusMessage({ type: '', text: '' });
-    
-    // --- THIS IS CHANGE #1 ---
-    // We've added 'dues' to this list.
     if ((activeTab === 'venmo' || activeTab === 'playoffs' || activeTab === 'dues') && selectedLeagueId) {
       setDataLoading(true);
       api.get(`/teams/?league=${selectedLeagueId}`)
@@ -85,14 +75,9 @@ function AdminDashboard() {
           setDataLoading(false);
         });
     }
-    // --- THIS IS CHANGE #2 ---
-    // We've REMOVED the old 'else if (activeTab === 'dues')' block
-    // It's no longer needed.
-
   }, [activeTab, selectedLeagueId]);
 
-  
-  // --- Event Handlers (No changes to handlers) ---
+
 
   const handleRunCommand = (command) => {
     setCommandLoading(true);
@@ -147,7 +132,6 @@ function AdminDashboard() {
     api.post(`/member-profile/${profileId}/update-venmo/`, { venmo_info })
       .then(response => {
         setStatusMessage({ type: 'success', text: response.data.message });
-        // We'll just refresh the data to be safe
         api.get(`/teams/?league=${selectedLeagueId}`).then(res => setTeams(res.data));
       })
       .catch(error => setStatusMessage({ type: 'error', text: 'Failed to save Venmo.' }));
@@ -156,7 +140,6 @@ function AdminDashboard() {
   const handleToggleDues = (profileId) => {
     api.post(`/member-profile/${profileId}/toggle-dues/`)
       .then(response => {
-        // Update the state locally for a faster UI response
         setTeams(prevTeams => 
           prevTeams.map(team => 
             (team.owner && team.owner.id === profileId)
@@ -182,10 +165,8 @@ function AdminDashboard() {
       .catch(error => setStatusMessage({ type: 'error', text: 'Failed to update flag.' }));
   };
   
-  // --- Render Functions for Tabs ---
   
   const renderCommandCenter = () => (
-    // ... (This function is unchanged)
     <div className="command-grid">
       <button className="command-button" onClick={() => handleRunCommand('sync')} disabled={commandLoading}>
         {commandLoading ? 'Running...' : 'Run Daily Sync'}
@@ -239,8 +220,6 @@ function AdminDashboard() {
     </table>
   );
 
-  // --- THIS IS CHANGE #3 ---
-  // This function now reads from 'teams' instead of 'allMembers'
   const renderDuesTracker = () => (
     <table className="standings-table">
       <thead>
@@ -252,7 +231,7 @@ function AdminDashboard() {
       </thead>
       <tbody>
         {teams.map(team => (
-          team.owner ? ( // Only show teams with owners
+          team.owner ? (
             <tr key={team.owner.id}>
               <td>{team.owner.full_name}</td>
               <td>{team.team_name}</td>
@@ -274,7 +253,6 @@ function AdminDashboard() {
   );
 
   const renderPlayoffEditor = () => (
-    // ... (This function is unchanged)
     <table className="standings-table">
       <thead>
         <tr>
@@ -308,10 +286,8 @@ function AdminDashboard() {
     </table>
   );
   
-  // --- Main Render Function ---
   
   const renderActiveTabContent = () => {
-    // ... (This function is unchanged)
     if (dataLoading) return <p>Loading data...</p>;
     
     switch(activeTab) {
@@ -328,8 +304,6 @@ function AdminDashboard() {
     }
   };
 
-  // --- THIS IS CHANGE #4 ---
-  // We've added 'dues' to this list
   const renderLeagueSubTabs = () => {
     if (activeTab !== 'venmo' && activeTab !== 'playoffs' && activeTab !== 'dues') {
       return null;
@@ -353,8 +327,6 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <h1>Admin Command Center</h1>
-      
-      {/* Main Tab Navigation (Unchanged) */}
       <nav className="admin-main-tabs">
         <button className={`admin-main-tab ${activeTab === 'commands' ? 'active' : ''}`} onClick={() => setActiveTab('commands')}>
           Commands
@@ -369,15 +341,11 @@ function AdminDashboard() {
           Playoff Editor
         </button>
       </nav>
-
-      {/* Status Message Area (Unchanged) */}
       {statusMessage.text && (
         <div className={`status-message ${statusMessage.type}`}>
           {statusMessage.text}
         </div>
       )}
-
-      {/* Main Content Area (Unchanged) */}
       <section className="admin-section">
         {renderLeagueSubTabs()}
         {renderActiveTabContent()}

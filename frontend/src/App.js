@@ -16,24 +16,18 @@ import Navbar from './components/Navbar';
 function App() {
   // Check localStorage for a saved theme, or default to 'light'
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  // Create a function to toggle the theme
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   };
 
-  // Create an effect that runs when 'theme' changes
   useEffect(() => {
-    // Update the <html> tag's data-theme attribute
     document.documentElement.setAttribute('data-theme', theme);
-    // Save the user's preference in localStorage
     localStorage.setItem('theme', theme);
-  }, [theme]); // This effect's running depends on the 'theme' state
+  }, [theme]);
 
   return (
     <div className="App">
-      {/* 5. Pass the theme and the toggle function down to the Navbar */}
       <Navbar toggleTheme={toggleTheme} theme={theme} />
 
       <Routes>

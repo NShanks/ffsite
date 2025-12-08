@@ -1,37 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api';
-import './LeagueDetailPage.css'; // 1. Import our new CSS
+import './LeagueDetailPage.css';
 import PlayerSticker from '../components/PlayerSticker';
 
 function LeagueDetailPage() {
-  const { id } = useParams(); // Get the league ID from the URL
+  const { id } = useParams();
 
-  // 2. Setup state for *both* pieces of data
   const [league, setLeague] = useState(null);
-  const [teams, setTeams] = useState([]); // This will hold our standings
+  const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLeagueData = () => {
-      // 3. Define our two API endpoints
       const leagueDetailsUrl = `/leagues/${id}/`;
       const teamsStandingsUrl = `/teams/?league=${id}`;
 
-      // 4. Use Promise.all to fetch both at the same time for speed
       Promise.all([
         api.get(leagueDetailsUrl),
         api.get(teamsStandingsUrl)
       ])
       .then(([leagueResponse, teamsResponse]) => {
-        // 5. When both are successful, update our state
         setLeague(leagueResponse.data);
-        setTeams(teamsResponse.data); // This is our new, *sorted* list of teams!
+        setTeams(teamsResponse.data);
         setIsLoading(false);
       })
       .catch(error => {
-        // If either one fails, show an error
         console.error('Error fetching league data:', error);
         setError(error);
         setIsLoading(false);
@@ -40,9 +35,8 @@ function LeagueDetailPage() {
 
     fetchLeagueData();
 
-  }, [id]); // This effect re-runs if the 'id' in the URL changes
+  }, [id]);
 
-  // 6. Handle loading and error states
   if (isLoading) {
     return <p>Loading league details...</p>;
   }
@@ -55,7 +49,6 @@ function LeagueDetailPage() {
     return <p>League not found.</p>;
   }
 
-  // 7. Render the final page with our new standings table!
   return (
     <div style={{ padding: '1rem 2rem' }}>
       <h1>{league.name}</h1>
@@ -74,7 +67,6 @@ function LeagueDetailPage() {
           </tr>
         </thead>
         <tbody>
-          {/* 8. Map over the 'teams' state to build the table rows */}
           {teams.map((team, index) => (
             <tr key={team.id}>
               <td>{index + 1}</td>

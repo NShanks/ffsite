@@ -38,7 +38,7 @@
   font-size: 1rem;
   border: 1px solid var(--border-color, #ddd);
   border-radius: 4px;
-  box-sizing: border-box; /* Important for padding */
+  box-sizing: border-box;
 }
 
 .login-button {

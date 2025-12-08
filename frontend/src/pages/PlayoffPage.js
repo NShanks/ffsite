@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api'; // Use our secure helper
-import './DashboardPage.css'; // Reuse the Pill Tabs styles
-import './LeagueDetailPage.css'; // Reuse the Glass Table styles
-import './PlayoffPage.css'; // New status styles
+import api from '../api';
+import './DashboardPage.css';
+import './LeagueDetailPage.css';
+import './PlayoffPage.css';
 
 function PlayoffPage() {
-  // State
   const [playoffData, setPlayoffData] = useState({}); // { 15: [...], 16: [...] }
   const [availableWeeks, setAvailableWeeks] = useState([]); // [15, 16]
   const [activeTab, setActiveTab] = useState(null); // Current selected week (e.g. 16)

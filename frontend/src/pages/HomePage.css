@@ -13,7 +13,6 @@
 }
 
 .home-hero h1 {
-  /* We use a gradient text effect for the main title */
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -26,10 +25,9 @@
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
-  font-weight: 450; /* Slightly lighter than regular */
+  font-weight: 450;
 }
 
-/* --- BENTO GRID LAYOUT --- */
 .bento-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -43,10 +41,7 @@
   }
 }
 
-/* --- BENTO BOX (Using the Global Glass Utility) --- */
-/* We extend the .glass-card class in the JS, or apply properties here */
 .bento-box {
-  /* Inherit Glass Properties */
   background: var(--glass-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -60,20 +55,19 @@
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   text-decoration: none;
   position: relative;
-  /* overflow: hidden; */
 }
 
 .bento-box:hover {
   background: var(--glass-bg-hover);
   transform: translateY(-6px) scale(1.01);
   box-shadow: 
-    0 20px 40px -10px rgba(0, 0, 0, 0.15), /* Deeper shadow on hover */
+    0 20px 40px -10px rgba(0, 0, 0, 0.15),
     var(--glass-shine);
 }
 
 .bento-box h2 {
   font-size: var(--text-xl);
-  color: var(--text-primary); /* Headings should be distinct */
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -81,16 +75,15 @@
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--brand-primary); /* Accent color for subheadings */
+  color: var(--brand-primary);
   margin-bottom: 1rem;
 }
 
-/* --- WIDGET LIST STYLES --- */
 .bento-widget-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  flex-grow: 1; /* Pushes CTA to bottom */
+  flex-grow: 1;
 }
 
 .bento-widget-list li {
@@ -124,11 +117,11 @@
   font-weight: 700;
   font-size: 1.5rem;
   color: var(--text-primary);
-  font-variant-numeric: tabular-nums; /* Aligns numbers nicely */
+  font-variant-numeric: tabular-nums;
 }
 
 .cta-text {
-  margin-top: auto; /* Pushes to bottom of card */
+  margin-top: auto;
   padding-top: 1.5rem;
   font-weight: 600;
   font-size: var(--text-sm);

@@ -95,7 +95,6 @@ function HomePage() {
               player={{
                 name: player.player_name,
                 position: player.position,
-                // We construct the URL using the ID from the backend
                 avatar_url: `https://sleepercdn.com/content/nfl/players/${player.player_id}.jpg`
               }}
               detail={

@@ -15,15 +15,12 @@ function Navbar({ toggleTheme, theme }) {
 
   return (
     <nav className="navbar">
-      {/* Logo Section */}
       <div className="nav-logo">
         <NavLink to="/">FFSite</NavLink>
       </div>
 
-      {/* Main Links Container */}
       <div className="nav-links">
         
-        {/* Group 1: Pages */}
         <div className="nav-button-pages">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/about">About</NavLink>
@@ -31,10 +28,8 @@ function Navbar({ toggleTheme, theme }) {
           <NavLink to="/playoffs">BIG Playoff</NavLink>
         </div>
 
-        {/* Group 2: Actions (Admin, Login, Theme) */}
         <div className="nav-button-container">
           
-          {/* Conditional Login/Logout */}
           {isLoggedIn ? (
             <>
               <NavLink to="/admin-dashboard">Admin</NavLink>
@@ -46,7 +41,6 @@ function Navbar({ toggleTheme, theme }) {
             <NavLink to="/login">Login</NavLink>
           )}
 
-          {/* Theme Toggle with your SVGs */}
           <button onClick={toggleTheme} className="theme-toggle-button icon-button">
             {theme === 'light' ? (
               <span 

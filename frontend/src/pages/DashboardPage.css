@@ -1,5 +1,3 @@
-/* frontend/src/pages/DashboardPage.css */
-
 .tabs-container {
   display: flex;
   flex-direction: column;
@@ -7,81 +5,65 @@
   width: 100%;
 }
 
-/* --- 1. THE PILL TRACK --- */
-/* This is the container that holds all the buttons */
 .league-tabs {
-  display: inline-flex; /* Shrink to fit content, not full width */
+  display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.25rem; /* Tiny gap between pills */
+  gap: 0.25rem;
   
   margin-bottom: 2rem;
   
-  /* The "Track" Style (Glassmorphism) */
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: var(--glass-border);
   
-  /* Fully rounded container */
   border-radius: 100px; 
-  padding: 0.25rem; /* Padding keeps the pills inside the track */
+  padding: 0.25rem;
   
-  /* Reset the old border style */
   border-bottom: var(--glass-border); 
 }
 
-/* --- 2. THE TAB BUTTONS --- */
 .tab {
-  /* Typography */
-  font-family: var(--font-sans); /* Sans works better for UI controls */
-  font-size: var(--text-sm);     /* Keep it compact and legible */
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   font-weight: 500;
   letter-spacing: var(--tracking-normal);
   
-  /* Colors */
   color: var(--text-secondary);
   background-color: transparent;
   
-  /* Spacing */
   padding: 0.5rem 1.25rem;
   cursor: pointer;
   border: none;
   
-  /* Shape */
-  border-radius: 100px; /* Fully rounded pill */
+  border-radius: 100px;
   
-  /* Reset old styles */
   border-bottom: none; 
   margin-bottom: 0;
   
-  /* Animation */
   transition: all 0.2s ease;
 }
 
-/* Hover State */
 .tab:hover {
   color: var(--text-primary);
-  background-color: rgba(0,0,0,0.05); /* Subtle grey hover */
+  background-color: rgba(0,0,0,0.05);
 }
 
 [data-theme="dark"] .tab:hover {
   background-color: rgba(255,255,255,0.1);
 }
 
-/* --- 3. ACTIVE STATE (The Solid Pill) --- */
 .tab.active {
-  color: var(--bg-app); /* Inverted text color (White on Dark, Black on Light) */
-  background-color: var(--text-primary); /* Solid high-contrast pill */
+  color: var(--bg-app);
+  background-color: var(--text-primary);
   font-weight: 600;
   
-  /* Add a small shadow to pop it off the track */
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   
   border-bottom: none;
 }
 
-/* --- Standings Table Container --- */
 .standings-content {
   width: 100%;
   max-width: 1000px;
@@ -95,15 +77,14 @@
   border-radius: 0;
 }
 
-/* Mobile Adjustment */
 @media (max-width: 600px) {
   .league-tabs {
-    border-radius: 20px; /* Less round on mobile to save space */
-    width: 100%; /* Full width on mobile */
+    border-radius: 20px;
+    width: 100%;
   }
   
   .tab {
-    flex: 1; /* Buttons stretch to fill width */
+    flex: 1;
     text-align: center;
     font-size: var(--text-xs);
     padding: 0.5rem 0.5rem;
