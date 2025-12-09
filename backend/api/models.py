@@ -77,6 +77,8 @@ class UltimatePlayoffEntry(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="playoff_entries")
     season = models.IntegerField()
     playoff_week = models.IntegerField()
+    conference = models.CharField(max_length=50, blank=True, null=True)
+    starting_points = models.FloatField(default=0.0)
     week_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     is_eliminated = models.BooleanField(default=False)
     final_rank = models.IntegerField(null=True, blank=True)
