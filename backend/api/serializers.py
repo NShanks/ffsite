@@ -50,7 +50,7 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = [
             'id', 
-            'owner', # This will now be a full object
+            'owner',
             'league', 
             'sleeper_roster_id', 
             'team_name', 
@@ -59,7 +59,8 @@ class TeamSerializer(serializers.ModelSerializer):
             'losses',
             'ties',
             'points_for',
-            'top_three_players'
+            'top_three_players',
+            'conference'
         ]
 
 
@@ -80,7 +81,8 @@ class UltimatePlayoffEntrySerializer(serializers.ModelSerializer):
             'playoff_week', 
             'week_score', 
             'is_eliminated', 
-            'final_rank'
+            'final_rank',
+            'conference'
         ]
 
 

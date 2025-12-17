@@ -14,8 +14,10 @@ function PlayoffPage() {
   useEffect(() => {
     api.get('/playoff-entries/')
       .then(response => {
+        console.log('Fetched playoff data:', response.data);
         const grouped = groupEntriesByWeek(response.data);
         setPlayoffData(grouped);
+        // console.log('Grouped playoff data by week:', grouped);
         const weeks = Object.keys(grouped).map(Number).sort((a, b) => a - b);
         setAvailableWeeks(weeks);
         if (weeks.length > 0) setActiveTab(weeks[weeks.length - 1]);
@@ -38,6 +40,7 @@ function PlayoffPage() {
   };
 
   const getStatusBadge = (entry) => {
+    // console.log('Determining status for entry:', entry);
     if (entry.is_eliminated) return <span className="status-badge status-eliminated">Eliminated</span>;
     const maxWeek = Math.max(...availableWeeks);
     return entry.playoff_week === maxWeek 
@@ -99,7 +102,10 @@ function PlayoffPage() {
   
   // --- NEW: Filter Logic ---
   const confA = currentEntries.filter(e => e.conference === 'Conference A');
+  // console.log('currentEntries:', currentEntries);
+  // console.log('Conference A Entries:', confA);
   const confB = currentEntries.filter(e => e.conference === 'Conference B');
+  // console.log('Conference B Entries:', confB);
   const unknownConf = currentEntries.filter(e => !e.conference || (e.conference !== 'Conference A' && e.conference !== 'Conference B'));
 
   return (
