@@ -90,3 +90,109 @@
   gap: 12px;
   justify-content: center;
 }
+
+/* ── Standings: mobile card layout ───────────────────────────── */
+
+@media (max-width: 700px) {
+  /* Turn table into block so we can grid each row */
+  .standings-table,
+  .standings-table tbody {
+    display: block;
+  }
+
+  .standings-table thead {
+    display: none;
+  }
+
+  .standings-table tbody tr {
+    display: grid;
+    grid-template-columns: 1.75rem 1fr auto auto;
+    grid-template-rows: auto auto;
+    column-gap: 0.5rem;
+    row-gap: 0.4rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--text-tertiary) 15%, transparent);
+    background: none;
+  }
+
+  .standings-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  /* Keep the playoff-cutoff indicator */
+  .standings-table tbody tr:nth-child(6) {
+    border-bottom: 2px solid var(--color-error);
+  }
+
+  /* Remove individual cell borders — the row handles it */
+  .standings-table td {
+    padding: 0;
+    border: none;
+    font-size: var(--text-sm);
+  }
+
+  /* Rank */
+  .standings-table td:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    align-self: center;
+  }
+
+  /* Team name */
+  .standings-table td:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  /* Record */
+  .standings-table td:nth-child(3) {
+    grid-column: 3;
+    grid-row: 1;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  /* Points For */
+  .standings-table td:nth-child(4) {
+    grid-column: 4;
+    grid-row: 1;
+    font-weight: 700;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  /* Top players — spans full width, sits below the info row */
+  .standings-table td:nth-child(5) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-left: 2.25rem; /* indent to align under team name */
+  }
+
+  .standings-table td:nth-child(5) .player-avatars {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* my-team highlight adapts to block display */
+  .my-team-row {
+    border-left: 3px solid var(--brand-primary) !important;
+    background: color-mix(in srgb, var(--brand-primary) 8%, transparent) !important;
+    padding-left: calc(1rem - 3px); /* compensate for the border */
+  }
+
+  .my-team-row td {
+    background: none !important;
+  }
+
+  .my-team-row td:first-child {
+    border-left: none;
+  }
+}

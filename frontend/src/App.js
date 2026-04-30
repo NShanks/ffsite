@@ -1,55 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import './App.css';
-// Pages
+import { AuthProvider } from './context/AuthContext';
+import { SeasonProvider } from './context/SeasonContext';
+import { DataProvider } from './context/DataContext';
+import Navbar from './components/Navbar';
+import SeasonModeBanner from './components/SeasonModeBanner';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import LeagueDetailPage from './pages/LeagueDetailPage';
-import PlayoffPage from './pages/PlayoffPage';  
-import LoginPage from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
+import PlayoffPage from './pages/PlayoffPage';
 import AboutPage from './pages/AboutPage';
-// Components
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
+import WelcomePage from './pages/WelcomePage';
+import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
 
 function App() {
-  // 2. Setup theme state
-  // We check localStorage for a saved theme, or default to 'light'
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const location = useLocation();
 
-  // 3. Create a function to toggle the theme
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-  };
-
-  // 4. Create an effect that runs when 'theme' changes
   useEffect(() => {
-    // 4a. Update the <html> tag's data-theme attribute
     document.documentElement.setAttribute('data-theme', theme);
-    // 4b. Save the user's preference in localStorage
     localStorage.setItem('theme', theme);
-  }, [theme]); // This effect depends on the 'theme' state
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
 
   return (
-    <div className="App">
-      {/* 5. Pass the theme and the toggle function down to the Navbar */}
-      <Navbar toggleTheme={toggleTheme} theme={theme} />
-
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/leagues/:id" element={<LeagueDetailPage />} />
-        <Route path="/playoffs" element={<PlayoffPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/about" element={<AboutPage />} />
-
-        <Route element={<ProtectedRoute />}>
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        </Route>
-      </Routes>
-    </div>
+    <AuthProvider>
+      <SeasonProvider>
+      <DataProvider>
+        <div className="App">
+          <Navbar toggleTheme={toggleTheme} theme={theme} />
+          <SeasonModeBanner />
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/"               element={<HomePage />} />
+              <Route path="/dashboard"      element={<DashboardPage />} />
+              <Route path="/leagues/:index" element={<LeagueDetailPage />} />
+              <Route path="/playoffs"       element={<PlayoffPage />} />
+              <Route path="/about"          element={<AboutPage />} />
+              <Route path="/login"          element={<LoginPage />} />
+              <Route path="/register"       element={<RegisterPage />} />
+              <Route path="/profile"        element={<ProfilePage />} />
+              <Route path="/welcome"        element={<WelcomePage />} />
+              <Route element={<ProtectedRoute staffOnly />}>
+                <Route path="/admin"        element={<AdminDashboard />} />
+              </Route>
+            </Routes>
+          </AnimatePresence>
+        </div>
+      </DataProvider>
+      </SeasonProvider>
+    </AuthProvider>
   );
 }
 

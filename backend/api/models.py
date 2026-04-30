@@ -4,27 +4,28 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class MemberProfile(models.Model):
-    # This links our profile to a specific Django User account.
-    # The User model itself already handles: username, password, email
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # --- Our Custom Fields ---
-    full_name = models.CharField(max_length=100, blank=True)
-    sleeper_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    sleeper_id = models.CharField(max_length=100, blank=True, null=True)
+    sleeper_display_name = models.CharField(max_length=100, blank=True, null=True)
     payment_info = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
     has_paid_dues = models.BooleanField(default=False)
+    has_completed_onboarding = models.BooleanField(default=True)
     discord_username = models.CharField(max_length=100, blank=True, null=True)
-    # This links to another MemberProfile (a commissioner)
-    # on_delete=models.SET_NULL means if the inviting commissioner's
-    # profile is deleted, this field just becomes blank (null).
     invited_by = models.ForeignKey(
-        'self', 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True
     )
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
+
     def __str__(self):
-        # This tells Django what to show in the admin panel (e.g., "Nic")
         return self.user.username
     
 class League(models.Model):
@@ -96,6 +97,51 @@ class Payout(models.Model):
     def __str__(self):
         # Shows "Nic - $5.00 (Weekly Winner Week 5)" in admin
         return f"{self.recipient.user.username} - ${self.amount} ({self.reason})"
+
+class Season(models.Model):
+    year = models.IntegerField(unique=True)
+    label = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    league_ids = models.JSONField(default=list)
+
+    def __str__(self):
+        return f"{self.label} ({'active' if self.is_active else 'archived'})"
+
+
+class PlannedLeague(models.Model):
+    season = models.ForeignKey(Season, related_name='planned_leagues', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    sleeper_league_id = models.CharField(max_length=100, blank=True, null=True)
+    order = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.name} ({self.season.year})"
+
+
+class LeagueAssignment(models.Model):
+    member = models.ForeignKey(MemberProfile, on_delete=models.CASCADE, related_name='league_assignments')
+    planned_league = models.ForeignKey(PlannedLeague, on_delete=models.CASCADE, related_name='assignments')
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('member', 'season')
+
+    def __str__(self):
+        return f"{self.member} → {self.planned_league}"
+
+
+class SeasonDues(models.Model):
+    member = models.ForeignKey(MemberProfile, on_delete=models.CASCADE, related_name='season_dues')
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    paid = models.BooleanField(default=False)
+    paid_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('member', 'season')
+
+    def __str__(self):
+        return f"{self.member} dues {self.season.year}: {'paid' if self.paid else 'unpaid'}"
+
 
 class CommonPlayer(models.Model):
     # This table is wiped and rewritten every day by the sync script

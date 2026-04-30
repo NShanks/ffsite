@@ -1,80 +1,82 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './LoginPage.css'; // We'll create this file next
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { pageVariants, pageTransition } from '../utils/animations';
+import './AuthPage.css';
 
 function LoginPage() {
-  // 1. Create state for the form fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError]       = useState(null);
+  const [loading, setLoading]   = useState(false);
+  const { login } = useAuth();
+  const navigate  = useNavigate();
 
-  // 2. Get the navigate function to redirect on success
-  const navigate = useNavigate();
-
-  // 3. This function runs when the user clicks "Submit"
-  const handleSubmit = async (event) => {
-    // Prevent the form from doing a full page refresh
-    event.preventDefault(); 
-    setError(null); // Clear any old errors
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
-      // 4. Make the API call to your Django token endpoint
-      const response = await axios.post('http://localhost:8000/api/token/', {
-        username: username,
-        password: password
-      });
-
-      // 5. SUCCESS! Save the tokens in localStorage
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-
-      // 6. Redirect to the main dashboard
-      // We force a window reload to make the Navbar update
-      // its "Login" / "Logout" state.
-      navigate('/dashboard');
-      window.location.reload();
-
+      await login(username, password);
+      navigate('/');
     } catch (err) {
-      // 7. FAILURE! Show an error message
-      console.error('Login Error:', err);
-      setError('Login failed. Please check your username and password.');
+      setError(err.message || 'Login failed. Check your username and password.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Admin Login</h2>
+    <motion.div
+      className="auth-page"
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={pageTransition}
+    >
+      <div className="auth-card">
+        <h1>Sign in</h1>
+        <p className="auth-subtitle">Welcome back to the IYKYK League Hub.</p>
 
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input 
-            type="text" 
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required 
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          {error && <div className="auth-error">{error}</div>}
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input 
-            type="password" 
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required 
-          />
-        </div>
+          <div className="auth-field">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
+            />
+          </div>
 
-        {/* Show an error if one exists */}
-        {error && <p className="error-message">{error}</p>}
+          <div className="auth-field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </div>
 
-        <button type="submit" className="login-button">Login</button>
-      </form>
-    </div>
+          <button className="auth-submit" type="submit" disabled={loading}>
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Don't have an account? <Link to="/register">Create one</Link>
+        </p>
+      </div>
+    </motion.div>
   );
 }
 

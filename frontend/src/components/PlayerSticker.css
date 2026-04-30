@@ -88,7 +88,7 @@
   bottom: 110%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  
+
   background-color: rgba(0, 0, 0, 0.9);
   color: white;
   padding: 6px 10px;
@@ -97,7 +97,8 @@
   white-space: nowrap;
   pointer-events: none;
   z-index: 20;
-  
+  text-align: center;
+
   transition: all 0.2s ease;
 }
 

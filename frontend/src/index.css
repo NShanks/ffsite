@@ -28,62 +28,52 @@
   --color-error: oklch(0.6 0.2 25);
   
   /* --- 3. LIGHT THEME VARIABLES --- */
-  --bg-app: oklch(0.98 0.01 260); /* Very subtle tint */
-  
+  --bg-app: oklch(0.97 0.005 255); /* Clean near-white, barely cool */
+
   /* Text */
   --text-primary: oklch(0.15 0.02 260);   /* Almost Black */
   --text-secondary: oklch(0.45 0.04 260); /* Grey */
   --text-tertiary: oklch(0.65 0.04 260);  /* Light Grey */
 
   /* THE LIQUID GLASS RECIPE (Light) */
-  /* The background needs opacity to let the blur work */
-  --glass-bg: rgba(255, 255, 255, 0.65); 
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-opaque: rgba(255, 255, 255, 0.92);
   --glass-bg-hover: rgba(255, 255, 255, 0.8);
-  
-  /* The Border: A subtle white outline + a faint grey ring */
   --glass-border: 1px solid rgba(255, 255, 255, 0.6);
-  
-  /* The "Shine": An inner white shadow to simulate edge thickness */
   --glass-shine: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
-  
-  /* The Shadow: Soft, diffuse, diffuse */
-  --glass-shadow: 
+  --glass-shadow:
     0 4px 24px -1px rgba(0, 0, 0, 0.05),
     0 10px 40px -5px rgba(0, 0, 0, 0.02);
 
-  /* Background Blobs (Vibrant for Light Mode) */
-  --blob-1: oklch(0.85 0.15 260 / 0.6); /* Blue */
-  --blob-2: oklch(0.85 0.15 320 / 0.6); /* Purple */
-  --blob-3: oklch(0.9 0.15 200 / 0.6);  /* Cyan */
+  /* Background Blobs — NFL palette (navy + red + steel blue) */
+  --blob-1: oklch(0.72 0.12 258 / 0.55); /* NFL navy */
+  --blob-2: oklch(0.62 0.18 22 / 0.38);  /* NFL red  */
+  --blob-3: oklch(0.85 0.07 235 / 0.45); /* Steel blue */
 }
 
 [data-theme="dark"] {
   /* --- 4. DARK THEME VARIABLES --- */
   --bg-app: oklch(0.1 0.01 260); /* Deep dark blue-grey */
-  
-  /* Text */
+
+  /* Text — secondary/tertiary bumped up for readability */
   --text-primary: oklch(0.98 0.01 260);
-  --text-secondary: oklch(0.7 0.03 260);
-  --text-tertiary: oklch(0.5 0.03 260);
+  --text-secondary: oklch(0.78 0.03 260);
+  --text-tertiary: oklch(0.58 0.03 260);
 
   /* THE LIQUID GLASS RECIPE (Dark) */
   --glass-bg: rgba(30, 30, 35, 0.6);
+  --glass-bg-opaque: rgba(28, 28, 33, 0.94);
   --glass-bg-hover: rgba(40, 40, 45, 0.7);
-  
-  /* Dark mode glass needs a thin white border to pop against the dark bg */
   --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-  
-  /* Inner shine is subtler in dark mode */
   --glass-shine: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-  
-  --glass-shadow: 
+  --glass-shadow:
     0 8px 32px -8px rgba(0, 0, 0, 0.5),
     0 2px 8px -2px rgba(0, 0, 0, 0.3);
 
-  /* Background Blobs (Deep & moody for Dark Mode) */
-  --blob-1: oklch(0.25 0.1 260 / 0.5); 
-  --blob-2: oklch(0.25 0.1 300 / 0.5);
-  --blob-3: oklch(0.2 0.1 220 / 0.5);
+  /* Background Blobs — deep navy + red, matches light mode palette */
+  --blob-1: oklch(0.22 0.09 260 / 0.6); /* Deep navy */
+  --blob-2: oklch(0.22 0.12 22 / 0.45); /* Deep red   */
+  --blob-3: oklch(0.18 0.06 240 / 0.5); /* Deep steel */
 }
 
 /* --- 5. GLOBAL RESET & BASE --- */
@@ -98,6 +88,7 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
   
   /* THE MESH GRADIENT BACKGROUND */
   background-image: 

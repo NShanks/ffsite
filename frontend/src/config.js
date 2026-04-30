@@ -1,0 +1,10 @@
+export const LEAGUE_IDS = [
+  '1252705424256270336', // Old Phones
+  '1252701932896657408', // WWE Division
+  '1252704674759315456', // ESPN 8 The Ocho
+  '1252705235122520064', // Pokémon Division
+  '1252705690842050560', // Cartoon Villains
+  '1252704914572849152', // ANIMAL Division
+];
+
+export const BIG_PLAYOFF_START_WEEK = 15;

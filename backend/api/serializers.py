@@ -1,38 +1,39 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-# Import all of your models
 from .models import (
-    MemberProfile, 
-    League, 
-    Team, 
-    WeeklyScore, 
-    UltimatePlayoffEntry, 
-    Payout,
-    CommonPlayer
+    MemberProfile, League, Team, WeeklyScore,
+    UltimatePlayoffEntry, Payout, CommonPlayer,
+    Season, PlannedLeague, LeagueAssignment, SeasonDues,
 )
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
 
+
 class MemberProfileSerializer(serializers.ModelSerializer):
-    # This 'user' field will use the UserSerializer above
-    # to show the user's info instead of just their ID.
+    """Public-safe serializer — no payment info or contact details."""
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = MemberProfile
+        fields = ['id', 'user', 'first_name', 'last_name', 'sleeper_id']
+
+
+class MemberProfileAdminSerializer(serializers.ModelSerializer):
+    """Full serializer — only used in admin-authenticated endpoints."""
     user = UserSerializer(read_only=True)
 
     class Meta:
         model = MemberProfile
         fields = [
-            'id', 
-            'user', 
-            'full_name', 
-            'sleeper_id', 
-            'payment_info', 
-            'has_paid_dues', 
-            'discord_username',
-            'invited_by'
+            'id', 'user', 'first_name', 'last_name', 'sleeper_id',
+            'sleeper_display_name', 'payment_info', 'phone',
+            'has_paid_dues', 'discord_username', 'invited_by',
         ]
+
 
 class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,26 +41,25 @@ class LeagueSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'sleeper_league_id', 'season', 'commissioner']
 
 
+class TeamOwnerSerializer(serializers.ModelSerializer):
+    """Minimal owner info safe to embed in public team responses."""
+    username = serializers.CharField(source='user.username', read_only=True)
+    full_name = serializers.CharField(read_only=True)  # reads @property
+
+    class Meta:
+        model = MemberProfile
+        fields = ['id', 'first_name', 'last_name', 'full_name', 'username']
+
+
 class TeamSerializer(serializers.ModelSerializer):
-    # This is the "magic" line.
-    # It tells Django to use the serializer above 
-    # for the 'owner' field.
-    owner = MemberProfileSerializer(read_only=True) 
+    owner = TeamOwnerSerializer(read_only=True)
 
     class Meta:
         model = Team
         fields = [
-            'id', 
-            'owner', # This will now be a full object
-            'league', 
-            'sleeper_roster_id', 
-            'team_name', 
-            'made_league_playoffs',
-            'wins',
-            'losses',
-            'ties',
-            'points_for',
-            'top_three_players'
+            'id', 'owner', 'league', 'sleeper_roster_id', 'team_name',
+            'made_league_playoffs', 'wins', 'losses', 'ties', 'points_for',
+            'top_three_players',
         ]
 
 
@@ -71,16 +71,12 @@ class WeeklyScoreSerializer(serializers.ModelSerializer):
 
 class UltimatePlayoffEntrySerializer(serializers.ModelSerializer):
     team = serializers.StringRelatedField()
+
     class Meta:
         model = UltimatePlayoffEntry
         fields = [
-            'id', 
-            'team',
-            'season', 
-            'playoff_week', 
-            'week_score', 
-            'is_eliminated', 
-            'final_rank'
+            'id', 'team', 'season', 'playoff_week',
+            'week_score', 'is_eliminated', 'final_rank',
         ]
 
 
@@ -94,3 +90,55 @@ class CommonPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommonPlayer
         fields = ['rank', 'player_name', 'player_id', 'position', 'nfl_team', 'count', 'average_score']
+
+
+# ── Season / Organizer serializers ────────────────────────────────────────────
+
+class SeasonSerializer(serializers.ModelSerializer):
+    season_type = serializers.SerializerMethodField()
+
+    def get_season_type(self, obj):
+        if obj.league_ids and obj.is_active:  return 'active'
+        if obj.league_ids:                    return 'completed'
+        return 'pre_season'
+
+    class Meta:
+        model = Season
+        fields = ['id', 'year', 'label', 'is_active', 'league_ids', 'season_type']
+
+
+class PlannedLeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlannedLeague
+        fields = ['id', 'season', 'name', 'sleeper_league_id', 'order']
+
+
+class OrganizerMemberSerializer(serializers.ModelSerializer):
+    """Member card for the organizer view — includes contact info for admin."""
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
+    assigned_league_id = serializers.SerializerMethodField()
+    dues_paid = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MemberProfile
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email', 'phone', 'payment_info',
+            'sleeper_id', 'sleeper_display_name',
+            'assigned_league_id', 'dues_paid',
+        ]
+
+    def get_assigned_league_id(self, obj):
+        season = self.context.get('season')
+        if not season:
+            return None
+        assignment = obj.league_assignments.filter(season=season).select_related('planned_league').first()
+        return assignment.planned_league_id if assignment else None
+
+    def get_dues_paid(self, obj):
+        season = self.context.get('season')
+        if not season:
+            return False
+        dues = obj.season_dues.filter(season=season).first()
+        return dues.paid if dues else False

@@ -132,28 +132,203 @@
   mask-position: center;
 }
 
-/* Mobile Response */
+.nav-username {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 0 0.25rem;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.nav-username:hover {
+  opacity: 1;
+}
+
+.nav-signin {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 20%, transparent);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.nav-signin:hover {
+  background: color-mix(in srgb, var(--text-primary) 15%, transparent);
+}
+
+/* ── Year picker ──────────────────────────────────────────────── */
+
+.nav-year-picker {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-tertiary) 25%, transparent);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.2s ease, color 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+}
+
+.nav-year-picker:hover,
+.nav-year-picker:focus {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+}
+
+/* ── Hamburger button (hidden on desktop) ─────────────────────── */
+
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 100px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+  background: var(--glass-bg-hover);
+}
+
+/* Three-bar → X morphing icon */
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.hamburger-icon {
+  position: relative;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.hamburger-icon::before { top: -6px; }
+.hamburger-icon::after  { top:  6px; }
+
+/* Open state → X */
+.hamburger-icon.open {
+  background: transparent;
+}
+
+.hamburger-icon.open::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-icon.open::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ── Backdrop ─────────────────────────────────────────────────── */
+
+.nav-backdrop {
+  display: none;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
   .navbar {
-    width: 95%;
-    padding: 0.5rem;
-    flex-direction: column;
-    gap: 0.5rem;
-    border-radius: 24px; /* Less round on mobile to save space */
+    position: sticky;
+    top: 1rem;
+    width: 90%;
+    padding: 0.5rem 1rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 100px;
+    /* needed so the dropdown menu can escape the pill */
+    overflow: visible;
   }
-  
-  .nav-links {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .nav-button-container {
-    margin-left: 0;
-    border-left: none;
-    padding-left: 0;
-    border-top: 1px solid var(--border-color);
-    padding-top: 0.5rem;
-    width: 100%;
+
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
     justify-content: center;
+    margin-left: auto;
+  }
+
+  /* Dropdown menu panel */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem;
+
+    background: var(--glass-bg-opaque);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 20px;
+  }
+
+  .navbar.open .nav-links {
+    display: flex;
+  }
+
+  .nav-button-pages {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .nav-button-pages a {
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+  }
+
+  .nav-button-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-left: 0;
+    padding-left: 0;
+    padding-top: 0.5rem;
+    border-left: none;
+    border-top: 1px solid color-mix(in srgb, var(--text-tertiary) 25%, transparent);
+    width: 100%;
+    gap: 0.25rem;
+  }
+
+  /* Backdrop visible when menu is open */
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+  }
+
+  .navbar {
+    z-index: 1000;
   }
 }

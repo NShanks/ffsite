@@ -1,0 +1,453 @@
+/* frontend/src/pages/PlayoffPage.css */
+
+.playoff-page {
+  padding: 2rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────── */
+
+.playoff-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.playoff-hero h1 {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  letter-spacing: var(--tracking-tight);
+}
+
+.playoff-hero p {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  font-weight: 450;
+}
+
+/* ── Sticky week bar ───────────────────────────────────────────────── */
+
+.playoff-week-bar {
+  position: sticky;
+  top: 4.5rem;
+  z-index: 20;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--glass-shadow);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.playoff-week-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.playoff-week-bar-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.playoff-week-pills {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.playoff-week-pill {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--text-tertiary) 30%, transparent);
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.playoff-week-pill:hover {
+  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  color: var(--text-primary);
+}
+
+.playoff-week-pill.active {
+  background: var(--text-primary);
+  color: var(--bg-app);
+  border-color: var(--text-primary);
+}
+
+/* ── Entries container — fade on week change ───────────────────────── */
+
+.playoff-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Entry card ────────────────────────────────────────────────────── */
+
+.playoff-entry-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 0;
+}
+
+.playoff-entry-card:has(.sticker-wrapper:hover),
+.playoff-entry-card:has(.sticker-wrapper:focus) {
+  z-index: 10;
+}
+
+.playoff-entry-card:hover {
+  background: var(--glass-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.12), var(--glass-shine);
+}
+
+.playoff-entry-card.status-eliminated {
+  opacity: 0.55;
+}
+
+.playoff-entry-card.is-me {
+  border-color: color-mix(in srgb, var(--brand-primary) 50%, transparent);
+  background: color-mix(in srgb, var(--brand-primary) 5%, var(--glass-bg));
+}
+
+.playoff-entry-rank-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 2.5rem;
+  flex-shrink: 0;
+  gap: 0.15rem;
+}
+
+.playoff-you-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-primary);
+  background: color-mix(in srgb, var(--brand-primary) 15%, transparent);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.playoff-entry-card.status-champion {
+  border-color: color-mix(in srgb, #f59e0b 50%, transparent);
+  box-shadow: var(--glass-shadow), 0 0 0 1px color-mix(in srgb, #f59e0b 30%, transparent);
+}
+
+/* ── Entry header ──────────────────────────────────────────────────── */
+
+.playoff-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.playoff-entry-rank {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--text-tertiary);
+  width: 2.5rem;
+  flex-shrink: 0;
+  letter-spacing: var(--tracking-tight);
+}
+
+.playoff-entry-team {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.playoff-entry-team-name {
+  font-weight: 700;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playoff-entry-owner {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.playoff-entry-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.playoff-entry-score {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.playoff-chevron {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  width: 1.25rem;
+  text-align: center;
+}
+
+/* ── Status badges ─────────────────────────────────────────────────── */
+
+.playoff-status-badge {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.playoff-status-badge.status-advanced {
+  background: color-mix(in srgb, var(--color-success) 15%, transparent);
+  color: var(--color-success);
+}
+
+.playoff-status-badge.status-eliminated {
+  background: color-mix(in srgb, var(--color-error, #ef4444) 12%, transparent);
+  color: var(--color-error, #ef4444);
+}
+
+.playoff-status-badge.status-champion {
+  background: color-mix(in srgb, #f59e0b 15%, transparent);
+  color: #d97706;
+}
+
+/* ── Chevron rotation ──────────────────────────────────────────────── */
+
+.playoff-chevron {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.playoff-entry-card.expanded .playoff-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Expand / collapse animation ───────────────────────────────────── */
+
+.playoff-expand-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.playoff-expand-body.open {
+  grid-template-rows: 1fr;
+}
+
+.playoff-expand-inner {
+  overflow: hidden;
+  transition: opacity 0.25s ease;
+  opacity: 0;
+}
+
+.playoff-expand-body.open .playoff-expand-inner {
+  opacity: 1;
+}
+
+/* Lift overflow on both the body and inner wrapper when a sticker is hovered,
+   so the tooltip can escape the clipped containers */
+.playoff-expand-body.open:has(.sticker-wrapper:hover),
+.playoff-expand-body.open:has(.sticker-wrapper:focus) {
+  overflow: visible;
+}
+
+.playoff-expand-inner:has(.sticker-wrapper:hover),
+.playoff-expand-inner:has(.sticker-wrapper:focus) {
+  overflow: visible;
+}
+
+/* ── Lineup ────────────────────────────────────────────────────────── */
+
+.playoff-lineup {
+  margin-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--text-tertiary) 15%, transparent);
+  padding-top: 1rem;
+}
+
+.playoff-lineup-loading,
+.playoff-lineup-empty {
+  padding: 1rem 0;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.playoff-lineup-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 3.5rem;
+  align-items: center;
+  padding: 0 0.25rem 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-tertiary) 15%, transparent);
+  margin-bottom: 0.25rem;
+}
+
+.playoff-lineup-col-slot,
+.playoff-lineup-col-player,
+.playoff-lineup-col-score {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.playoff-lineup-col-score {
+  text-align: right;
+}
+
+/* ── Starter row ───────────────────────────────────────────────────── */
+
+.playoff-starter-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 3.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-tertiary) 10%, transparent);
+}
+
+.playoff-starter-row:last-of-type {
+  border-bottom: none;
+}
+
+.playoff-slot-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-primary);
+}
+
+.playoff-player-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.playoff-player-sticker {
+  flex-shrink: 0;
+}
+
+.playoff-player-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.playoff-player-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playoff-player-pos {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.playoff-player-stats {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playoff-player-empty {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.playoff-starter-score {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Lineup total row ──────────────────────────────────────────────── */
+
+.playoff-lineup-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.25rem 0;
+  margin-top: 0.25rem;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ── Empty state ───────────────────────────────────────────────────── */
+
+.playoff-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-tertiary);
+  font-size: var(--text-base);
+}
+
+/* ── Mobile tweaks ─────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .playoff-entry-right {
+    gap: 0.5rem;
+  }
+
+  .playoff-status-badge {
+    display: none;
+  }
+
+  .playoff-entry-score {
+    font-size: 1.25rem;
+  }
+}

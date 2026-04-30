@@ -1,17 +1,19 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function ProtectedRoute() {
-  // Check if the user is logged in
-  const isLoggedIn = !!localStorage.getItem('access_token');
+function ProtectedRoute({ staffOnly = false }) {
+  const { user, authLoading } = useAuth();
 
-  if (isLoggedIn) {
-    // If logged in, render the child component
-    return <Outlet />;
-  } else {
-    // If not logged in, redirect to the /login page
-    return <Navigate to="/login" replace />;
-  }
+  // Wait until auth state is resolved — avoids flash-redirect on page load
+  if (authLoading) return null;
+
+  if (!user) return <Navigate to="/login" replace />;
+
+  // Staff-only routes redirect non-admins to home instead of login
+  if (staffOnly && !user.is_staff) return <Navigate to="/" replace />;
+
+  return <Outlet />;
 }
 
 export default ProtectedRoute;

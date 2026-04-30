@@ -1,0 +1,70 @@
+/* ProfilePage.css */
+
+.profile-card {
+  max-width: 480px;
+}
+
+/* ── Section divider labels ── */
+
+.profile-section-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin: 1.5rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-tertiary) 20%, transparent);
+}
+
+.profile-section-label:first-of-type {
+  margin-top: 0;
+}
+
+/* ── Read-only input ── */
+
+.profile-readonly {
+  opacity: 0.6;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Linked badge ── */
+
+.profile-linked-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 25%, transparent);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.profile-linked-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success);
+  flex-shrink: 0;
+}
+
+.profile-linked-badge strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ── Success message ── */
+
+.auth-success {
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 25%, transparent);
+  color: var(--color-success);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  font-size: var(--text-sm);
+  margin-bottom: 1.25rem;
+}
