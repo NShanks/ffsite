@@ -21,6 +21,7 @@ export default function WelcomePage() {
   const [stepIndex, setStepIndex] = useState(0);
   const [direction, setDirection]   = useState(1);
   const [venmo, setVenmo]           = useState(user?.payment_info || '');
+  const [discord, setDiscord]       = useState(user?.discord_username || '');
   const [saving, setSaving]         = useState(false);
 
   const go = (delta) => {
@@ -32,7 +33,8 @@ export default function WelcomePage() {
     setSaving(true);
     try {
       const payload = { has_completed_onboarding: true };
-      if (venmo.trim()) payload.payment_info = venmo.trim();
+      if (venmo.trim())   payload.payment_info    = venmo.trim();
+      if (discord.trim()) payload.discord_username = discord.trim();
       await updateProfile(payload);
     } catch {
       // non-blocking — still navigate
@@ -77,7 +79,7 @@ export default function WelcomePage() {
             >
               {stepIndex === 0 && <StepWelcome user={user} />}
               {stepIndex === 1 && <StepHowItWorks />}
-              {stepIndex === 2 && <StepSetup venmo={venmo} setVenmo={setVenmo} user={user} />}
+              {stepIndex === 2 && <StepSetup venmo={venmo} setVenmo={setVenmo} discord={discord} setDiscord={setDiscord} user={user} />}
               {stepIndex === 3 && <StepAllSet />}
             </motion.div>
           </AnimatePresence>
@@ -150,12 +152,12 @@ function StepHowItWorks() {
   );
 }
 
-function StepSetup({ venmo, setVenmo, user }) {
+function StepSetup({ venmo, setVenmo, discord, setDiscord, user }) {
   return (
     <div className="welcome-step-content">
       <div className="welcome-step-icon">💸</div>
       <h2>One more thing</h2>
-      <p>Add your Venmo handle so your commish can track dues. You can always update this later in your profile.</p>
+      <p>Add your handles so your commish can reach you. You can always update these later in your profile.</p>
       <div className="auth-field" style={{ marginTop: '1.25rem' }}>
         <label htmlFor="welcome-venmo">Venmo / Payment Handle</label>
         <input
@@ -169,6 +171,20 @@ function StepSetup({ venmo, setVenmo, user }) {
       </div>
       {user?.payment_info && !venmo && (
         <p className="field-hint">Already set: {user.payment_info}</p>
+      )}
+      <div className="auth-field" style={{ marginTop: '1rem' }}>
+        <label htmlFor="welcome-discord">Discord Username</label>
+        <input
+          id="welcome-discord"
+          type="text"
+          value={discord}
+          onChange={(e) => setDiscord(e.target.value)}
+          placeholder="username"
+          autoComplete="off"
+        />
+      </div>
+      {user?.discord_username && !discord && (
+        <p className="field-hint">Already set: {user.discord_username}</p>
       )}
     </div>
   );
