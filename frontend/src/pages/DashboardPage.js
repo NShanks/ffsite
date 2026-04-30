@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { useSeason } from '../context/SeasonContext';

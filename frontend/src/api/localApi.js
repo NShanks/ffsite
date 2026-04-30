@@ -288,9 +288,10 @@ function buildBigPlayoff(snapshot) {
     const numAdvancing = Math.ceil(weekEntries.length / 2);
 
     weekEntries.forEach((entry, index) => {
+      const id = entryId++;
       const rank = index + 1;
       allEntries.push({
-        id: entryId++,
+        id,
         team: entry.teamLabel,
         season: entry.season,
         playoff_week: week,

@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react';
 import { fetchAllLeagueData, fetchPlayers, fetchAllWeeksHistory } from '../api/sleeperApi';
-import { LEAGUE_IDS, BIG_PLAYOFF_START_WEEK } from '../config';
+import { BIG_PLAYOFF_START_WEEK } from '../config';
 import { useSeason } from './SeasonContext';
 import {
   buildTeamsByLeague,

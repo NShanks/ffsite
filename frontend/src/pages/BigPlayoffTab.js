@@ -50,10 +50,6 @@ export default function BigPlayoffTab() {
       .catch(() => {});
   }, [selectedLeague]);
 
-  const flaggedCount = teams.filter((t) => t.made_league_playoffs).length
-    + leagues.reduce((acc) => acc, 0); // placeholder — see note below
-
-  // Count across all leagues is expensive; show a note instead
   const handleToggleFlag = (teamId) => {
     api.post(`/team/${teamId}/toggle-playoff-flag/`)
       .then((res) => {
