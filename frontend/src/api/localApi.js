@@ -286,12 +286,13 @@ function buildBigPlayoff(snapshot) {
       .sort((a, b) => b.weekScore - a.weekScore);
 
     const numAdvancing = Math.ceil(weekEntries.length / 2);
+    const baseId = entryId;
+    entryId += weekEntries.length;
 
     weekEntries.forEach((entry, index) => {
-      const id = entryId++;
       const rank = index + 1;
       allEntries.push({
-        id,
+        id: baseId + index,
         team: entry.teamLabel,
         season: entry.season,
         playoff_week: week,

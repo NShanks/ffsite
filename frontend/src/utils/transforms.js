@@ -385,11 +385,12 @@ export function buildBigPlayoff(leagues, startWeek = 15) {
       .sort((a, b) => b.weekScore - a.weekScore);
 
     const numAdvancing = Math.ceil(weekEntries.length / 2);
+    const baseId = entryId;
+    entryId += weekEntries.length;
 
     weekEntries.forEach((entry, i) => {
-      const id = entryId++;
       allEntries.push({
-        id,
+        id: baseId + i,
         team: entry.teamLabel,
         leagueId: entry.sleeperId,
         rosterId: entry.rosterId,
