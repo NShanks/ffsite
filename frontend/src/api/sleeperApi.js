@@ -16,8 +16,15 @@ export async function fetchAllLeagueData(leagueIds, bigPlayoffStartWeek = 15) {
   const currentWeek = nflState.week || nflState.display_week || 0;
   const isOffseason = nflState.season_type === 'off';
 
-  // Which week to use for the "recent scores" widget (cap at 17, regular season only)
-  const recentWeek = currentWeek > 0 ? Math.min(currentWeek, 17) : 17;
+  // Which week to use for the "recent scores" widget (cap at 17, regular season only).
+  // Sleeper's `week` rolls over on Tuesday before any games are played, so if the
+  // current week has no points yet, show the last week that does.
+  let recentWeek = currentWeek > 0 ? Math.min(currentWeek, 17) : 17;
+  if (recentWeek > 1 && leagueIds.length > 0) {
+    const probe = await get(`${BASE}/league/${leagueIds[0]}/matchups/${recentWeek}`).catch(() => []);
+    const hasScores = (probe || []).some((m) => (m.points || 0) > 0);
+    if (!hasScores) recentWeek -= 1;
+  }
   // Last week that has matchup data (regular season caps at 17)
   const lastDataWeek = isOffseason ? 17 : Math.min(currentWeek, 17);
 
