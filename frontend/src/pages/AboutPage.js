@@ -82,7 +82,7 @@ function AboutPage() {
 
         {/* Origin story */}
         <AboutCard icon="📖" title="How It Started">
-          <TodoBlock label="Origin story coming soon — fill this in after talking to your friend. Describe when IYKYK started, who founded it, how it grew, and where the name came from." />
+          <TodoBlock label="Origin story coming soon. Describe when IYKYK started, who founded it, how it grew, and where the name came from." />
         </AboutCard>
 
         {/* How it works */}
