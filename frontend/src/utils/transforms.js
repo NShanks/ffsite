@@ -190,10 +190,10 @@ export function buildPowerRankings(leagues) {
 
 // ─── Common playoff players widget ───────────────────────────────────────────
 
-function buildPlayerAverageScores(leagues) {
+function buildPlayerAverageScores(historyData) {
   const totals = {};
-  (leagues || []).forEach((ld) => {
-    Object.values(ld.matchups || {}).forEach((weekMatchups) => {
+  (historyData || []).forEach(({ weeks }) => {
+    (weeks || []).forEach((weekMatchups) => {
       (weekMatchups || []).forEach((m) => {
         Object.entries(m.players_points || {}).forEach(([pid, pts]) => {
           const score = parseFloat(pts);
@@ -213,7 +213,9 @@ function buildPlayerAverageScores(leagues) {
   return avgs;
 }
 
-export function buildCommonPlayers(leagues, players) {
+// historyData is the full-season matchup history from fetchAllWeeksHistory
+// (ld.matchups only covers playoff weeks, which don't exist yet pre-Week 15).
+export function buildCommonPlayers(leagues, players, historyData) {
   if (!players) return [];
 
   const counts = {};
@@ -227,7 +229,7 @@ export function buildCommonPlayers(leagues, players) {
     });
   });
 
-  const avgScores = buildPlayerAverageScores(leagues);
+  const avgScores = buildPlayerAverageScores(historyData);
   const result = [];
   let rank = 1;
 

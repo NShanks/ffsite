@@ -117,7 +117,7 @@ export function DataProvider({ children }) {
       leagueMatchups:   buildLeagueMatchups(rawData.leagues),
       weeklyWinners:    buildWeeklyWinners(rawData.leagues),
       powerRankings:    buildPowerRankings(rawData.leagues),
-      commonPlayers:    buildCommonPlayers(rawData.leagues, players),
+      commonPlayers:    buildCommonPlayers(rawData.leagues, players, historyData),
       bigPlayoffEntries: buildBigPlayoff(rawData.leagues, BIG_PLAYOFF_START_WEEK),
       records:           historyData ? buildRecords(historyData, rawData.leagues) : null,
       historyLoading,

@@ -473,7 +473,7 @@ function HomePage() {
         </motion.div>
 
         <motion.div variants={itemVariants} style={{ gridColumn: '1 / -1' }}>
-          <CommonPlayersBox commonPlayers={commonPlayers} loading={loading} />
+          <CommonPlayersBox commonPlayers={commonPlayers} loading={loading || historyLoading} />
         </motion.div>
 
         <motion.div variants={itemVariants}>
