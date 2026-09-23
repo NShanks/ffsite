@@ -233,8 +233,10 @@ export function buildCommonPlayers(leagues, players, historyData) {
   const result = [];
   let rank = 1;
 
+  // Primary: most playoff-eligible rosters. Tiebreak: highest average score
+  // (0.0-average players — no games played yet — naturally sort last).
   Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
+    .sort((a, b) => b[1] - a[1] || (avgScores[b[0]] || 0) - (avgScores[a[0]] || 0))
     .slice(0, 15)
     .forEach(([pid, count]) => {
       const p = players[pid];
