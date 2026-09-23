@@ -68,8 +68,8 @@ function Navbar({ toggleTheme, theme }) {
                 <span
                   className="theme-icon"
                   style={{
-                    maskImage: 'url(/IcRoundNightLight.svg)',
-                    WebkitMaskImage: 'url(/IcRoundNightLight.svg)',
+                    maskImage: 'url(/IcRoundNightlight.svg)',
+                    WebkitMaskImage: 'url(/IcRoundNightlight.svg)',
                   }}
                   aria-label="Switch to Dark Mode"
                 />
